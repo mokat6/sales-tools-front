@@ -1,10 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import { CompanyDto, MyApiClient } from "../generated-sdk/myApiClient";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const [companies, setCompanies] = useState<CompanyDto[]>();
+
+  useEffect(() => {
+    const doIt = async () => {
+      const apiClient = new MyApiClient("http://localhost:5243");
+      const response = await apiClient.company(12, "asd");
+      setCompanies(response);
+    };
+
+    doIt();
+  }, []);
+
+  const checkin = () => {
+    console.log(companies);
+  };
 
   return (
     <>
@@ -18,18 +34,15 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+      <p onClick={checkin}> lol {JSON.stringify(companies, null, 5)}</p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

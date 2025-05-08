@@ -1,0 +1,17 @@
+{
+  "runtime": "Net90",
+  "documentGenerator": {
+    "fromDocument": {
+      "url": "http://localhost:5243/swagger/v1/swagger.json"
+    }
+  },
+  "codeGenerators": {
+    "openApiToTypeScriptClient": {
+      "className": "MyApiClient",
+      "moduleName": "",
+      "template": "Fetch",
+      "typeScriptVersion": 4.0,
+      "output": "./generated-sdk/myApiClient.ts"
+    }
+  }
+}
