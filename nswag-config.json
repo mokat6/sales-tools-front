@@ -10,7 +10,7 @@
   },
   "codeGenerators": {
     "openApiToTypeScriptClient": {
-      "className": "OpenApiSdk",
+      "className": "SwaggerSdk",
       "typeScriptVersion": 4.0,
       "template": "Fetch",
       "promiseType": "Promise",
@@ -62,7 +62,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "api/OpenApiSdk.ts"
+      "output": "api/SwaggerSdk.ts"
     }
   }
 }

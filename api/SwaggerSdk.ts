@@ -8,7 +8,23 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-export class MyApiClient {
+export interface ISwaggerSdk {
+
+    /**
+     * @param pageSize (optional) 
+     * @param cursor (optional) 
+     * @return OK
+     */
+    company(pageSize?: number | undefined, cursor?: string | undefined): Promise<CompanyDto[]>;
+
+    /**
+     * @param compId (optional) 
+     * @return OK
+     */
+    contact(compId?: number | undefined): Promise<ContactDto[]>;
+}
+
+export class SwaggerSdk implements ISwaggerSdk {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -23,7 +39,7 @@ export class MyApiClient {
      * @param cursor (optional) 
      * @return OK
      */
-    company(pageSize: number | undefined, cursor: string | undefined): Promise<CompanyDto[]> {
+    company(pageSize?: number | undefined, cursor?: string | undefined, signal?: AbortSignal): Promise<CompanyDto[]> {
         let url_ = this.baseUrl + "/api/Company?";
         if (pageSize === null)
             throw new Error("The parameter 'pageSize' cannot be null.");
@@ -37,6 +53,7 @@ export class MyApiClient {
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "text/plain"
             }
@@ -76,7 +93,7 @@ export class MyApiClient {
      * @param compId (optional) 
      * @return OK
      */
-    contact(compId: number | undefined): Promise<ContactDto[]> {
+    contact(compId?: number | undefined, signal?: AbortSignal): Promise<ContactDto[]> {
         let url_ = this.baseUrl + "/api/Contact?";
         if (compId === null)
             throw new Error("The parameter 'compId' cannot be null.");
@@ -86,6 +103,7 @@ export class MyApiClient {
 
         let options_: RequestInit = {
             method: "GET",
+            signal,
             headers: {
                 "Accept": "text/plain"
             }
@@ -123,11 +141,11 @@ export class MyApiClient {
 }
 
 export enum CompClassification {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
-    _3 = 3,
-    _4 = 4,
+    Unspecified = "Unspecified",
+    GoodMatch = "GoodMatch",
+    FuckYou = "FuckYou",
+    Ecommerce = "Ecommerce",
+    GimmeSomeLove = "GimmeSomeLove",
 }
 
 export class CompanyDto implements ICompanyDto {
@@ -275,13 +293,13 @@ export interface IContactDto {
 }
 
 export enum ContactType {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
-    _3 = 3,
-    _4 = 4,
-    _5 = 5,
-    _6 = 6,
+    Unspecified = "Unspecified",
+    Phone = "Phone",
+    Email = "Email",
+    Facebook = "Facebook",
+    Linkedin = "Linkedin",
+    Instagram = "Instagram",
+    Other = "Other",
 }
 
 export class SwaggerException extends Error {

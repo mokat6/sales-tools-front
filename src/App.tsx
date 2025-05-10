@@ -2,24 +2,23 @@ import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import { CompanyDto, MyApiClient } from "../generated-sdk/myApiClient";
+import type { CompanyDto } from "../api/ApiTypes";
+import { apiClient } from "../api/ApiClient";
 
 function App() {
   const [count, setCount] = useState(0);
   const [companies, setCompanies] = useState<CompanyDto[]>();
 
   useEffect(() => {
-    const doIt = async () => {
-      const apiClient = new MyApiClient("http://localhost:5243");
-      const response = await apiClient.company(12, "asd");
-      setCompanies(response);
+    const run = async () => {
+      setCompanies(await apiClient.getCompanies());
     };
 
-    doIt();
+    run();
   }, []);
 
   const checkin = () => {
-    console.log(companies);
+    // console.log(companies);
   };
 
   return (

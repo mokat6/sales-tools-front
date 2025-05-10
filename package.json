@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "refreshsdk": "npx nswag run nswag-config.json"
+    "swag": "npx nswag run nswag-config.json",
+    "nswag": "nswag run nswag-config.json"
   },
   "dependencies": {
     "react": "^19.1.0",
