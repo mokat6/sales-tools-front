@@ -62,7 +62,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "api/SwaggerSdk.ts"
+      "output": "src/api/SwaggerSdk.ts"
     }
   }
 }

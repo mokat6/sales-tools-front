@@ -2,12 +2,21 @@ import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import type { CompanyDto } from "../api/ApiTypes";
-import { apiClient } from "../api/ApiClient";
+import type { CompanyDto } from "./api/ApiTypes";
+import { apiClient } from "./api/ApiClient";
 
 function App() {
   const [count, setCount] = useState(0);
   const [companies, setCompanies] = useState<CompanyDto[]>();
+
+  enum CompClassification {
+    Unspecified = "Unspecified",
+    GoodMatch = "GoodMatch",
+    FuckYou = "FuckYou",
+    Ecommerce = "Ecommerce",
+    GimmeSomeLove = "GimmeSomeLove",
+  }
+  console.log(CompClassification.Ecommerce);
 
   useEffect(() => {
     const run = async () => {
@@ -25,7 +34,7 @@ function App() {
     <>
       <div>
         <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
+          <img src={viteLogo} className="logo border" alt="Vite logo" />
         </a>
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
