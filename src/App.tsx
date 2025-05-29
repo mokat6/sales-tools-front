@@ -4,45 +4,52 @@ import { apiClient } from "./api/ApiClient";
 import { Button } from "./components/Button";
 import { ThemeSelect } from "./components/ThemeSelect";
 import { KeyValue } from "./components/KeyValue";
-import { DataGrid } from "./components/DataGrid";
-import { DG1 } from "./components/dataGrid/DG1";
-import { DG2groups } from "./components/dataGrid/DG2groups";
-import { DebouncedInput, DG3 } from "./components/dataGrid/DG3";
-import { DG4 } from "./components/dataGrid/DG4";
-import { DG6_column_Ordering } from "./components/dataGrid/DG6_column_Ordering";
+import { DataTable } from "./components/dataTables/DataTable";
+import { Select } from "./components/Select";
+import ClassificationSelector from "./components/ClassificationSelector";
 
 function App() {
-  const checkin = () => {
-    // console.log(companies);
-  };
+  const [data, setData] = useState<CompanyDto[]>([]);
+  const [keyValueData, setKeyValueData] = useState<CompanyDto | null>(null);
 
-  const kvData = {
-    id: 0,
-    country: "Germany",
-    city: "Offenbach am Main",
-    website: "http://069-it.de/",
-  };
+  useEffect(() => {
+    const run = async () => {
+      try {
+        const response = await apiClient.getCompanies();
+        setData(response);
+      } catch (e) {
+        console.log(`Error fetching data: ${e}`);
+      }
+    };
+    run();
+  }, []);
+
+  // const onRowSelect = (row: CompanyDto | null) => {
+  //   console.log("row selected > ", row);
+  //   setKey
+  // }
 
   return (
     <>
-      <div className="flex flex-col gap-20  items-center pt-6 bg-background">
-        <Button>submit to me</Button>
+      <div className="flex gap-20  items-start pt-6 bg-background">
+        <section className="">
+          <DataTable data={data} onRowSelect={setKeyValueData} />
+        </section>
+        <section className="flex flex-col">
+          <div className="flex flex-col text-text-body">
+            <span>Company ID:</span>
+            <span className="text-3xl self-center min-h-12">{keyValueData?.id ?? " "}</span>
+          </div>
 
-        <h1>Popover soon</h1>
+          <ClassificationSelector id={keyValueData?.id ?? ""} value={keyValueData?.classification ?? ""} />
 
-        <ThemeSelect />
-
-        <KeyValue keyTitle="kkk" valueTitle="vvv" data={kvData} />
-
-        {/* <DG1 /> */}
-
-        {/* <DG2groups /> */}
-        {/* <DG3 /> */}
-        {/* <DebouncedInput className="border" value={""} onChange={() => console.log("fuck")} /> */}
-
-        {/* <DG4 /> */}
-
-        <DG6_column_Ordering />
+          <Button>submit to me</Button>
+          <h1 onClick={() => console.log(data)}>Popover soon</h1>
+          <ThemeSelect />
+        </section>
+        <section className="">
+          <KeyValue keyTitle="kkk" valueTitle="vvv" data={keyValueData} />
+        </section>
       </div>
     </>
   );

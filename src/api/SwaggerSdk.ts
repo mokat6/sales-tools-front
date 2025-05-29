@@ -40,6 +40,7 @@ export class SwaggerSdk implements ISwaggerSdk {
    */
   company(pageSize?: number | undefined, cursor?: string | undefined, signal?: AbortSignal): Promise<CompanyDto[]> {
     let url_ = this.baseUrl + "/api/Company?";
+    console.log("CALLIN > pageSIze = ", pageSize);
     if (pageSize === null) throw new Error("The parameter 'pageSize' cannot be null.");
     else if (pageSize !== undefined) url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
     if (cursor === null) throw new Error("The parameter 'cursor' cannot be null.");
