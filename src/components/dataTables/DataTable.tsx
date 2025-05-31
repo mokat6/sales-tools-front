@@ -94,10 +94,10 @@ export const DataTable = ({ data, onRowSelect }: DataTableProps) => {
     const selectedRowId = keys[0]; // Since it's single-select
     const selectedRow = table.getRowModel().rowsById[selectedRowId]?.original ?? null;
     onRowSelect(selectedRow);
-  }, [rowSelection, table, onRowSelect]);
+  }, [rowSelection, table, onRowSelect, data]);
 
   return (
-    <div>
+    <div className="bg-amber-400" onClick={() => console.log("row selection: ", rowSelection)}>
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

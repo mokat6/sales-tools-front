@@ -1,9 +1,0 @@
-/* 
-@layer variants {
-  @media (prefers-color-scheme: dark) {
-    .text-light {
-      color: var(--text-color-dark);
-    }
-  }
-} 
-*/

@@ -1,22 +1,43 @@
 import { Select } from "./Select";
-import { CompClassification } from "../api/SwaggerSdk";
+import { CompClassificationLabels, stringToCompClassification } from "../types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "../api/ApiClient";
+import { PatchCompanyDto } from "../api/SwaggerSdk";
 
 type ClassificationSelectorProps = {
-  id: string | number;
+  id: number;
   value: string | null;
+  disabled: boolean;
 };
 
-export default function ClassificationSelector({ id, value }: ClassificationSelectorProps) {
-  const onValueChange = (e) => console.log("changed , ", e);
+const options = Object.entries(CompClassificationLabels).map(([key, value]) => ({
+  label: value,
+  value: key,
+}));
 
-  const options = Object.values(CompClassification).map((value) => ({
-    label: value,
-    value,
-  }));
+export default function ClassificationSelector({ id, value, disabled }: ClassificationSelectorProps) {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: apiClient.patchCompany,
+    onSuccess: () => {
+      // queryClient.invalidateQueries({ queryKey: ["companiz", id] });
+      queryClient.invalidateQueries({ queryKey: ["companiz"] });
+    },
+  });
 
+  const onValueChange = (newClassification: string) => {
+    mutation.mutate({
+      compId: id,
+      body: PatchCompanyDto.fromJS({
+        classification: stringToCompClassification(newClassification),
+      }),
+    });
+  };
+
+  console.log("disbaled > ", disabled);
   return (
     <div>
-      <Select onValueChange={onValueChange} value={value ?? ""} options={options} />
+      <Select disabled={disabled} onValueChange={onValueChange} value={value ?? ""} options={options} />
     </div>
   );
 }

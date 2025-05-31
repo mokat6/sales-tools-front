@@ -23,9 +23,9 @@
 
   /* --font-primary: Helvetica, sans-serif; */
 
-  /* -[-------------*/
-  /* -[-------------*/
-  /* -[-------------*/
+  /* -------------*/
+  /* --------------*/
+  /* --------------*/
   --color-success-100: #f0fcf5; /*success background*/
   --color-success-300: #caf2d8; /*success border*/
   --color-success-500: #519a5d; /*success text, icons*/
@@ -54,10 +54,10 @@
   --color-text-on-primary-action: #ffffff;
 
   --color-border: #e0e0e0; /*grey*/
-  --color-background: #f6f6f6; /*aka surface? very light grey*/
+  --color-bg-background: #f6f6f6; /*aka surface? very light grey*/
   --color-bg-header-row: #ebebeb; /* grey*/
   --color-bg-table: #fff;
-
+  --color-bg-disabled: #b1b2b3;
   --color-header-row-text: #949494; /*dark grey*/
 
   --radius-none: 0;
@@ -88,9 +88,10 @@
   --color-text-on-primary-action: #ffffff; /* text on primary buttons: white */
 
   --color-border: #5b5b5b; /* same as component-border */
-  --color-background: #121212; /* true dark background */
+  --color-bg-background: #121212; /* true dark background */
   --color-bg-header-row: #4f4f4f; /* slightly elevated surface */
   --color-bg-table: #373737; /* table/card background */
+  --color-bg-disabled: #5c5c5c;
 
   --color-header-row-text: #b3b3b3; /* muted light grey text */
 }
@@ -107,9 +108,10 @@
   --color-text-on-primary-action: #ffffff; /* white text on dark green */
 
   --color-border: #c8e6c9; /* light green border */
-  --color-background: #f1f8f2; /* pale green background */
+  --color-bg-background: #f1f8f2; /* pale green background */
   --color-bg-header-row: #e0f2f1; /* slightly elevated surface (minty) */
   --color-bg-table: #ffffff; /* white cards/tables for contrast */
+  --color-bg-disabled: #9cab91;
 
   --color-header-row-text: #66bb6a; /* muted green header text */
 }
