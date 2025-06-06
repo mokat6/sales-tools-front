@@ -1,8 +1,8 @@
 import { Select } from "./Select";
-import { CompClassificationLabels, stringToCompClassification } from "../types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../api/ApiClient";
-import { PatchCompanyDto } from "../api/SwaggerSdk";
+import { CompanyDto } from "../api/SwaggerSdk";
+import { compClassificationOptions } from "../api/ApiTypes";
 
 type ClassificationSelectorProps = {
   id: number;
@@ -10,7 +10,7 @@ type ClassificationSelectorProps = {
   disabled: boolean;
 };
 
-const options = Object.entries(CompClassificationLabels).map(([key, value]) => ({
+const options = Object.entries(compClassificationOptions).map(([key, value]) => ({
   label: value,
   value: key,
 }));
@@ -28,8 +28,8 @@ export default function ClassificationSelector({ id, value, disabled }: Classifi
   const onValueChange = (newClassification: string) => {
     mutation.mutate({
       compId: id,
-      body: PatchCompanyDto.fromJS({
-        classification: stringToCompClassification(newClassification),
+      body: CompanyDto.fromJS({
+        classification: newClassification,
       }),
     });
   };

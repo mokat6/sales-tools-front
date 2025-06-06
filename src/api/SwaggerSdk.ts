@@ -23,10 +23,11 @@ export interface ISwaggerSdk {
     deleteCompany(id: number): Promise<void>;
 
     /**
+     * Applies a JSON Patch to a company.
      * @param body (optional) 
      * @return OK
      */
-    patchCompany(id: number, body?: PatchCompanyDto | undefined): Promise<void>;
+    patchCompany(id: number, body?: Operation[] | undefined): Promise<void>;
 
     /**
      * @param compId (optional) 
@@ -138,10 +139,11 @@ export class SwaggerSdk implements ISwaggerSdk {
     }
 
     /**
+     * Applies a JSON Patch to a company.
      * @param body (optional) 
      * @return OK
      */
-    patchCompany(id: number, body?: PatchCompanyDto | undefined, signal?: AbortSignal): Promise<void> {
+    patchCompany(id: number, body?: Operation[] | undefined, signal?: AbortSignal): Promise<void> {
         let url_ = this.baseUrl + "/api/Company/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -155,7 +157,7 @@ export class SwaggerSdk implements ISwaggerSdk {
             method: "PATCH",
             signal,
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json-patch+json",
             }
         };
 
@@ -230,7 +232,7 @@ export class SwaggerSdk implements ISwaggerSdk {
     }
 }
 
-export enum CompClassification {
+export enum CompClassificationDto {
     Unspecified = "Unspecified",
     GoodMatch = "GoodMatch",
     FuckYou = "FuckYou",
@@ -250,7 +252,7 @@ export class CompanyDto implements ICompanyDto {
     ratedCount?: string | undefined;
     googleMapsUrl?: string | undefined;
     bigFishScore?: number | undefined;
-    classification?: CompClassification;
+    classification?: CompClassificationDto;
 
     constructor(data?: ICompanyDto) {
         if (data) {
@@ -315,7 +317,7 @@ export interface ICompanyDto {
     ratedCount?: string | undefined;
     googleMapsUrl?: string | undefined;
     bigFishScore?: number | undefined;
-    classification?: CompClassification;
+    classification?: CompClassificationDto;
 }
 
 export class ContactDto implements IContactDto {
@@ -392,20 +394,14 @@ export enum ContactType {
     Other = "Other",
 }
 
-export class PatchCompanyDto implements IPatchCompanyDto {
-    companyName?: string | undefined;
-    country?: string | undefined;
-    city?: string | undefined;
-    fullAddress?: string | undefined;
-    website?: string | undefined;
-    categoryGoogle?: string | undefined;
-    ratingGoogle?: number | undefined;
-    ratedCount?: string | undefined;
-    googleMapsUrl?: string | undefined;
-    bigFishScore?: number | undefined;
-    classification?: CompClassification;
+export class Operation implements IOperation {
+    operationType?: OperationType;
+    path?: string | undefined;
+    op?: string | undefined;
+    from?: string | undefined;
+    value?: any | undefined;
 
-    constructor(data?: IPatchCompanyDto) {
+    constructor(data?: IOperation) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -416,56 +412,48 @@ export class PatchCompanyDto implements IPatchCompanyDto {
 
     init(_data?: any) {
         if (_data) {
-            this.companyName = _data["companyName"];
-            this.country = _data["country"];
-            this.city = _data["city"];
-            this.fullAddress = _data["fullAddress"];
-            this.website = _data["website"];
-            this.categoryGoogle = _data["categoryGoogle"];
-            this.ratingGoogle = _data["ratingGoogle"];
-            this.ratedCount = _data["ratedCount"];
-            this.googleMapsUrl = _data["googleMapsUrl"];
-            this.bigFishScore = _data["bigFishScore"];
-            this.classification = _data["classification"];
+            this.operationType = _data["operationType"];
+            this.path = _data["path"];
+            this.op = _data["op"];
+            this.from = _data["from"];
+            this.value = _data["value"];
         }
     }
 
-    static fromJS(data: any): PatchCompanyDto {
+    static fromJS(data: any): Operation {
         data = typeof data === 'object' ? data : {};
-        let result = new PatchCompanyDto();
+        let result = new Operation();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["companyName"] = this.companyName;
-        data["country"] = this.country;
-        data["city"] = this.city;
-        data["fullAddress"] = this.fullAddress;
-        data["website"] = this.website;
-        data["categoryGoogle"] = this.categoryGoogle;
-        data["ratingGoogle"] = this.ratingGoogle;
-        data["ratedCount"] = this.ratedCount;
-        data["googleMapsUrl"] = this.googleMapsUrl;
-        data["bigFishScore"] = this.bigFishScore;
-        data["classification"] = this.classification;
+        data["operationType"] = this.operationType;
+        data["path"] = this.path;
+        data["op"] = this.op;
+        data["from"] = this.from;
+        data["value"] = this.value;
         return data;
     }
 }
 
-export interface IPatchCompanyDto {
-    companyName?: string | undefined;
-    country?: string | undefined;
-    city?: string | undefined;
-    fullAddress?: string | undefined;
-    website?: string | undefined;
-    categoryGoogle?: string | undefined;
-    ratingGoogle?: number | undefined;
-    ratedCount?: string | undefined;
-    googleMapsUrl?: string | undefined;
-    bigFishScore?: number | undefined;
-    classification?: CompClassification;
+export interface IOperation {
+    operationType?: OperationType;
+    path?: string | undefined;
+    op?: string | undefined;
+    from?: string | undefined;
+    value?: any | undefined;
+}
+
+export enum OperationType {
+    Add = "Add",
+    Remove = "Remove",
+    Replace = "Replace",
+    Move = "Move",
+    Copy = "Copy",
+    Test = "Test",
+    Invalid = "Invalid",
 }
 
 export class SwaggerException extends Error {

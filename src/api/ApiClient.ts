@@ -1,4 +1,5 @@
-import { PatchCompanyDto, SwaggerSdk } from "./SwaggerSdk";
+import { dtoToJsonPatch as dtoToJsonPatchOperations } from "./dtoToJsonPatch";
+import { CompanyDto, SwaggerSdk } from "./SwaggerSdk";
 
 const BASE_URL = "http://localhost:5243";
 
@@ -20,8 +21,8 @@ export const apiClient = {
   getCompanies: async () => swaggerSdk.listCompanies(),
   getContacts: async (compId: number) => swaggerSdk.getCompanyContacts(compId),
   deleteCompany: async (compId: number) => swaggerSdk.deleteCompany(compId),
-  patchCompany: async ({ compId, body }: { compId: number; body: PatchCompanyDto }) => {
+  patchCompany: async ({ compId, body }: { compId: number; body: CompanyDto }) => {
     console.log("!!!!", compId, body);
-    swaggerSdk.patchCompany(compId, body);
+    swaggerSdk.patchCompany(compId, dtoToJsonPatchOperations(body));
   },
 };
