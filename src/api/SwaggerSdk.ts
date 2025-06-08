@@ -27,7 +27,12 @@ export interface ISwaggerSdk {
      * @param body (optional) 
      * @return OK
      */
-    patchCompany(id: number, body?: Operation[] | undefined): Promise<void>;
+    patchCompany(id: number, body?: Operation[] | undefined): Promise<CompanyDto>;
+
+    /**
+     * @return OK
+     */
+    getCompany(id: number): Promise<CompanyDto>;
 
     /**
      * @param compId (optional) 
@@ -52,7 +57,7 @@ export class SwaggerSdk implements ISwaggerSdk {
      * @return OK
      */
     listCompanies(pageSize?: number | undefined, cursor?: string | undefined, signal?: AbortSignal): Promise<CompanyDto[]> {
-        let url_ = this.baseUrl + "/api/Company?";
+        let url_ = this.baseUrl + "/api/Companies?";
         if (pageSize === null)
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
@@ -105,7 +110,7 @@ export class SwaggerSdk implements ISwaggerSdk {
      * @return OK
      */
     deleteCompany(id: number, signal?: AbortSignal): Promise<void> {
-        let url_ = this.baseUrl + "/api/Company/{id}";
+        let url_ = this.baseUrl + "/api/Companies/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -143,8 +148,8 @@ export class SwaggerSdk implements ISwaggerSdk {
      * @param body (optional) 
      * @return OK
      */
-    patchCompany(id: number, body?: Operation[] | undefined, signal?: AbortSignal): Promise<void> {
-        let url_ = this.baseUrl + "/api/Company/{id}";
+    patchCompany(id: number, body?: Operation[] | undefined, signal?: AbortSignal): Promise<CompanyDto> {
+        let url_ = this.baseUrl + "/api/Companies/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -158,6 +163,7 @@ export class SwaggerSdk implements ISwaggerSdk {
             signal,
             headers: {
                 "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
             }
         };
 
@@ -166,19 +172,63 @@ export class SwaggerSdk implements ISwaggerSdk {
         });
     }
 
-    protected processPatchCompany(response: Response): Promise<void> {
+    protected processPatchCompany(response: Response): Promise<CompanyDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
-            return;
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CompanyDto.fromJS(resultData200);
+            return result200;
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(null as any);
+        return Promise.resolve<CompanyDto>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getCompany(id: number, signal?: AbortSignal): Promise<CompanyDto> {
+        let url_ = this.baseUrl + "/api/Companies/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            signal,
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetCompany(_response);
+        });
+    }
+
+    protected processGetCompany(response: Response): Promise<CompanyDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CompanyDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<CompanyDto>(null as any);
     }
 
     /**

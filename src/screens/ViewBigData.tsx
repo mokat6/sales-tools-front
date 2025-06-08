@@ -1,7 +1,5 @@
 import type { CompanyDto } from "../api/ApiTypes";
 import { apiClient } from "../api/ApiClient";
-import { Button } from "../components/Button";
-import { ThemeSelect } from "../components/ThemeSelect";
 import { KeyValue } from "../components/KeyValue";
 import { DataTable } from "../components/dataTables/DataTable";
 import ClassificationSelector from "../components/ClassificationSelector";

@@ -8,8 +8,10 @@ export type { ICompanyDto, IContactDto, ContactType } from "./SwaggerSdk";
 // only exports types of the Class, not the implementation, only for TS
 export { type CompanyDto } from "./SwaggerSdk";
 
+const EMPTY_LABEL = "\u00A0"; // invisible character to avoid Select option from shrinking.
+
 export const compClassificationOptions = {
-  Unspecified: "",
+  Unspecified: EMPTY_LABEL,
   GoodMatch: "Good match",
   FuckYou: "Fuck you",
   Ecommerce: "E-commerce",

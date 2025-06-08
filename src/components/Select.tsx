@@ -1,17 +1,16 @@
 import * as SelectRadix from "@radix-ui/react-select";
 import { ChevronDownIcon, CheckIcon } from "@radix-ui/react-icons";
-import React from "react";
 
-export type SelectOption = {
+export type SelectOption<T extends string> = {
   label: string;
-  value: string;
+  value: T;
   disabled?: boolean;
 };
 
-export interface SelectProps {
-  options: SelectOption[];
-  value: string;
-  onValueChange: (value: string) => void;
+export interface SelectProps<T extends string> {
+  options: SelectOption<T>[];
+  value: T;
+  onValueChange: (value: T) => void;
   placeholder?: string;
   label?: string;
   disabled?: boolean;
@@ -20,7 +19,7 @@ export interface SelectProps {
   contentClassName?: string;
 }
 
-export function Select({ options, value, onValueChange, placeholder, disabled }: SelectProps) {
+export function Select<T extends string>({ options, value, onValueChange, placeholder, disabled }: SelectProps<T>) {
   return (
     <SelectRadix.Root value={value} onValueChange={onValueChange} disabled={disabled}>
       <SelectRadix.Trigger
