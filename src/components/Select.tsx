@@ -9,7 +9,7 @@ export type SelectOption<T extends string> = {
 
 export interface SelectProps<T extends string> {
   options: SelectOption<T>[];
-  value: T;
+  value?: T;
   onValueChange: (value: T) => void;
   placeholder?: string;
   label?: string;

@@ -6,7 +6,7 @@ import type { CompanyDto } from "../api/SwaggerSdk";
 type KeyValueProps = {
   keyTitle: string;
   valueTitle: string;
-  data: CompanyDto | null;
+  data: CompanyDto | undefined;
 };
 
 export const KeyValue = ({ keyTitle, valueTitle, data }: KeyValueProps) => {
