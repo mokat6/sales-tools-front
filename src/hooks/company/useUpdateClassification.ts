@@ -19,7 +19,7 @@ export default function () {
       return { previousCompanies };
     },
     onError: (_err, variables, context) => {
-      console.log("Optimistic update failed: ", _err);
+      console.error(`Failed updating classification on comp id ${variables.compId} : `, _err);
       const previous = context?.previousCompanies;
       if (!previous) return;
 

@@ -45,18 +45,16 @@ type DataTableProps = {
 };
 
 export const DataTable = ({ data, onRowSelect }: DataTableProps) => {
-  const [rowSelection, setRowSelection] = useState({});
+  const [rowSelection, setRowSelection] = useState(() => {
+    if (data.length === 0) return {};
+    return { [data[0].id ?? "0"]: true };
+  });
   const [globalFilter, setGlobalFilter] = useState("");
-  // const [data, setData] = useState(() => {
-  //   return [
-  //     { id: 34, name: "first Compa" },
-  //     { id: 35, name: "Comp two" },
-  //     { id: 36, name: "tree" },
-  //   ];
-  // });
 
-  const handleRowSelectionChange = (newSelection: Updater<Record<string, boolean>>) => {
+  const rowChangePreventDeselect = (newSelection: Updater<Record<string, boolean>>) => {
     const updatedSelection = typeof newSelection === "function" ? newSelection({}) : newSelection;
+    if (Object.keys(updatedSelection).length === 0) return;
+
     console.log("CLICK > ", updatedSelection);
     setRowSelection(updatedSelection);
   };
@@ -73,11 +71,12 @@ export const DataTable = ({ data, onRowSelect }: DataTableProps) => {
     },
     enableRowSelection: true, //enable row selection for all rows
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
-    onRowSelectionChange: handleRowSelectionChange,
+    onRowSelectionChange: rowChangePreventDeselect,
     getCoreRowModel: getCoreRowModel(),
     // getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
+    enableMultiRowSelection: false,
   });
 
   // TODO: delete later
@@ -92,7 +91,7 @@ export const DataTable = ({ data, onRowSelect }: DataTableProps) => {
   }, [rowSelection, table, onRowSelect]);
 
   return (
-    <div className="bg-amber-400">
+    <div className="bg-amber-400" onClick={() => console.log("log data ", rowSelection)}>
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

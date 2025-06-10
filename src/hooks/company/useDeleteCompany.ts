@@ -18,12 +18,12 @@ export default function useDeleteCompany() {
     },
 
     onError: (err, deletedId, context) => {
+      console.error(`Error deleting company with id ${deletedId}: `, err);
       queryClient.setQueryData(["companiz"], context?.prevData);
     },
 
     onSettled: () => {
       // queryClient.invalidateQueries({ queryKey: ["companiz"] });
-      console.log("done, settled, but don't fetch again");
     },
   });
 }

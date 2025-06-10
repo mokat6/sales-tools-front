@@ -23,7 +23,6 @@ export const apiClient = {
   getContacts: async (compId: number) => await swaggerSdk.getCompanyContacts(compId),
   deleteCompany: async (compId: number) => await swaggerSdk.deleteCompany(compId),
   patchCompany: async ({ compId, body }: { compId: number; body: ICompanyDto }) => {
-    console.log("!!!!", compId, body);
     // if you forget to await here, Tanstack query onSuccess won't wait either.
     return await swaggerSdk.patchCompany(compId, dtoToJsonPatchOperations(body));
   },

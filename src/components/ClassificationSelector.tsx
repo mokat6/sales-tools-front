@@ -35,7 +35,7 @@ export default function ClassificationSelector({ id, value }: ClassificationSele
         className="min-w-50"
         disabled={!value || !id}
         onValueChange={onValueChange}
-        value={value}
+        value={value ?? CompClassificationDto.Unspecified}
         options={options}
       />
     </div>
