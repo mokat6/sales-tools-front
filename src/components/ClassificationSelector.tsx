@@ -6,13 +6,13 @@ import { compClassificationOptions } from "../api/ApiTypes";
 
 type ClassificationSelectorProps = {
   id: number;
-  value: CompClassificationDto;
+  value?: CompClassificationDto;
   disabled: boolean;
 };
 
 const options = Object.entries(compClassificationOptions).map(([key, value]) => ({
   label: value,
-  value: key as CompClassificationDto,
+  value: (key as CompClassificationDto) ?? CompClassificationDto.Unspecified,
 }));
 
 export default function ClassificationSelector({ id, value, disabled }: ClassificationSelectorProps) {
@@ -23,7 +23,7 @@ export default function ClassificationSelector({ id, value, disabled }: Classifi
       await queryClient.cancelQueries({ queryKey: ["companiz"] });
 
       const previousCompanies = queryClient.getQueryData<CompanyDto[]>(["companiz"]);
-
+      console.log("BODY ", body);
       queryClient.setQueryData<CompanyDto[]>(["companiz"], (old) => {
         return old?.map((company) => (company.id === compId ? ({ ...company, ...body } as CompanyDto) : company));
       });
@@ -31,15 +31,14 @@ export default function ClassificationSelector({ id, value, disabled }: Classifi
       return { previousCompanies };
     },
     onError: (_err, variables, context) => {
-      if (context?.previousCompanies) {
-        queryClient.setQueryData(["companiz", variables.compId]);
-      }
+      // if (context?.previousCompanies) {
+      //   queryClient.setQueryData(["companiz", variables.compId]);
+      // }
     },
     onSuccess: (x) => {
       console.log("XX: ", x);
       console.log("on success classification selector");
-      // queryClient.invalidateQueries({ queryKey: ["companiz", id] });
-      queryClient.invalidateQueries({ queryKey: ["companiz"] });
+      // queryClient.invalidateQueries({ queryKey: ["companiz"] });
 
       // setTimeout(() => {
       //   queryClient.invalidateQueries({ queryKey: ["companiz"] });
@@ -60,7 +59,7 @@ export default function ClassificationSelector({ id, value, disabled }: Classifi
   console.log("disbaled > ", disabled);
   return (
     <div>
-      <Select disabled={disabled} onValueChange={onValueChange} value={value} options={options} />
+      <Select className="min-w-50" disabled={disabled} onValueChange={onValueChange} value={value} options={options} />
     </div>
   );
 }

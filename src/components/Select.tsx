@@ -19,11 +19,18 @@ export interface SelectProps<T extends string> {
   contentClassName?: string;
 }
 
-export function Select<T extends string>({ options, value, onValueChange, placeholder, disabled }: SelectProps<T>) {
+export function Select<T extends string>({
+  options,
+  value,
+  onValueChange,
+  placeholder,
+  disabled,
+  className,
+}: SelectProps<T>) {
   return (
     <SelectRadix.Root value={value} onValueChange={onValueChange} disabled={disabled}>
       <SelectRadix.Trigger
-        className="inline-flex items-center justify-between rounded px-4 py-2 bg-white text-black border border-gray-300 shadow-sm"
+        className={`inline-flex items-center justify-between rounded px-4 py-2 bg-white text-black border border-gray-300 shadow-sm ${className}`}
         aria-label="Theme"
       >
         <SelectRadix.Value placeholder={placeholder} />

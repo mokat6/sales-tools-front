@@ -31,7 +31,7 @@ export const KeyValue = ({ keyTitle, valueTitle, data }: KeyValueProps) => {
   );
 };
 
-const formatIfUrl = (value: unknown): JSX.Element | string | number => {
+function formatIfUrl<T>(value: T): JSX.Element | T {
   if (typeof value === "string" && value.startsWith("http")) {
     try {
       const url = new URL(value);
@@ -45,4 +45,4 @@ const formatIfUrl = (value: unknown): JSX.Element | string | number => {
     }
   }
   return value;
-};
+}

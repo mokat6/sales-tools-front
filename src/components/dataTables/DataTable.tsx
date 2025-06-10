@@ -12,7 +12,7 @@ import {
 } from "@tanstack/react-table";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import type { CompanyDto } from "./api/ApiTypes";
+import type { CompanyDto } from "../../api/SwaggerSdk";
 
 const columns: ColumnDef<CompanyDto>[] = [
   {
@@ -41,7 +41,7 @@ const columns: ColumnDef<CompanyDto>[] = [
 
 type DataTableProps = {
   data: CompanyDto[];
-  onRowSelect: (row: CompanyDto | null) => void;
+  onRowSelect: (row: number | undefined) => void;
 };
 
 export const DataTable = ({ data, onRowSelect }: DataTableProps) => {
@@ -57,13 +57,17 @@ export const DataTable = ({ data, onRowSelect }: DataTableProps) => {
 
   const handleRowSelectionChange = (newSelection: Updater<Record<string, boolean>>) => {
     const updatedSelection = typeof newSelection === "function" ? newSelection({}) : newSelection;
-    console.log(updatedSelection);
+    console.log("CLICK > ", updatedSelection);
     setRowSelection(updatedSelection);
   };
 
-  const table = useReactTable({
+  const table = useReactTable<CompanyDto>({
     data,
     columns,
+    getRowId: (row) => {
+      if (!row.id) throw new Error("row.id is undefined/null");
+      return row.id.toString();
+    },
     state: {
       rowSelection,
     },
@@ -76,28 +80,19 @@ export const DataTable = ({ data, onRowSelect }: DataTableProps) => {
     debugTable: true,
   });
 
+  // TODO: delete later
   useEffect(() => {
     // @ts-ignore
     window.__table = table;
   }, [table]);
 
-  const selecting = (row: Row<CompanyDto>) => {
-    const handler = row.getToggleSelectedHandler();
-  };
-
   useEffect(() => {
-    const keys = Object.keys(rowSelection);
-    if (keys.length == 0) {
-      onRowSelect(null);
-      return;
-    }
-    const selectedRowId = keys[0]; // Since it's single-select
-    const selectedRow = table.getRowModel().rowsById[selectedRowId]?.original ?? null;
-    onRowSelect(selectedRow);
-  }, [rowSelection, table, onRowSelect, data]);
+    const selectedId: string | undefined = Object.keys(rowSelection)[0];
+    onRowSelect(selectedId ? Number(selectedId) : undefined);
+  }, [rowSelection, table, onRowSelect]);
 
   return (
-    <div className="bg-amber-400" onClick={() => console.log("row selection: ", rowSelection)}>
+    <div className="bg-amber-400">
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
