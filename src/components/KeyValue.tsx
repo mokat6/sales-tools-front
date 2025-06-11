@@ -1,17 +1,15 @@
-import type { JSX } from "react";
-import type { CompanyDto } from "../api/SwaggerSdk";
+import { type Formatter } from "./helpers/formatters";
 
-// type keyValueData = Record<string, string | number>;
-
-type KeyValueProps = {
+type KeyValueProps<T> = {
   keyTitle: string;
   valueTitle: string;
-  data: CompanyDto | undefined;
+  data?: T;
+  formatters?: Partial<Record<keyof T, Formatter>>;
 };
 
-export const KeyValue = ({ keyTitle, valueTitle, data }: KeyValueProps) => {
+export const KeyValue = <T extends object>({ keyTitle, valueTitle, data, formatters = {} }: KeyValueProps<T>) => {
   const entries = Object.entries(data ?? {});
-
+  console.log("entr ", entries);
   return (
     <div className="bg-bg-table border border-border rounded  w-88 shadow text-text-body">
       {/* Header row */}
@@ -21,28 +19,16 @@ export const KeyValue = ({ keyTitle, valueTitle, data }: KeyValueProps) => {
       </div>
 
       {/* Data rows */}
-      {entries.map(([key, value]) => (
-        <div className="flex border-b border-border p-1" key={key}>
-          <div className=" basis-35">{key}</div>
-          <div className="flex-1 ">{formatIfUrl(value)}</div>
-        </div>
-      ))}
+      {entries.map(([key, value]) => {
+        const formatter = formatters[key as keyof T];
+        const formattedValue = formatter ? formatter(value) : String(value || "-");
+        return (
+          <div className="flex border-b border-border p-1" key={key}>
+            <div className=" basis-35">{key}</div>
+            <div className="flex-1 ">{formattedValue}</div>
+          </div>
+        );
+      })}
     </div>
   );
 };
-
-function formatIfUrl<T>(value: T): JSX.Element | T {
-  if (typeof value === "string" && value.startsWith("http")) {
-    try {
-      const url = new URL(value);
-      return (
-        <a href={url.href} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-          {url.hostname}
-        </a>
-      );
-    } catch {
-      return value;
-    }
-  }
-  return value;
-}
