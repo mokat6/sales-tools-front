@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Spinner } from "../components/Spinner";
 import useCompanies from "../hooks/company/useCompanies";
 import useCompany from "../hooks/company/useCompany";
-import { formatters } from "../components/helpers/formatters";
+import formatCompany from "../format/formatCompany";
 
 function ViewBigData() {
   const [selectedCompanyId, setSelectedCompanyId] = useState<number>();
@@ -39,16 +39,7 @@ function ViewBigData() {
           <h1 onClick={() => console.log(data)}>Popover soon</h1>
         </section>
         <section className="">
-          <KeyValue
-            keyTitle="Key"
-            valueTitle="Value"
-            data={selectedCompany}
-            formatters={{
-              website: formatters.url,
-              googleMapsUrl: formatters.url,
-              classification: formatters.companyClassification,
-            }}
-          />
+          <KeyValue keyTitle="Key" valueTitle="Value" data={formatCompany(selectedCompany)} />
         </section>
       </div>
     </>

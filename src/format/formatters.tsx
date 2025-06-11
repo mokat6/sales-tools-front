@@ -33,7 +33,7 @@ const formatIfUrl: Formatter = (value) => {
 };
 
 const plainText: Formatter = (value) => {
-  return String(value);
+  return String(value || "-");
 };
 
 export const formatters = {

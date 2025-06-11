@@ -1,13 +1,10 @@
-import { type Formatter } from "./helpers/formatters";
-
-type KeyValueProps<T> = {
+type KeyValueProps = {
   keyTitle: string;
   valueTitle: string;
-  data?: T;
-  formatters?: Partial<Record<keyof T, Formatter>>;
+  data?: Record<string, string | React.ReactNode>;
 };
 
-export const KeyValue = <T extends object>({ keyTitle, valueTitle, data, formatters = {} }: KeyValueProps<T>) => {
+export const KeyValue = ({ keyTitle, valueTitle, data }: KeyValueProps) => {
   const entries = Object.entries(data ?? {});
   console.log("entr ", entries);
   return (
@@ -20,12 +17,10 @@ export const KeyValue = <T extends object>({ keyTitle, valueTitle, data, formatt
 
       {/* Data rows */}
       {entries.map(([key, value]) => {
-        const formatter = formatters[key as keyof T];
-        const formattedValue = formatter ? formatter(value) : String(value || "-");
         return (
           <div className="flex border-b border-border p-1" key={key}>
             <div className=" basis-35">{key}</div>
-            <div className="flex-1 ">{formattedValue}</div>
+            <div className="flex-1 ">{value}</div>
           </div>
         );
       })}
