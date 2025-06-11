@@ -1,6 +1,8 @@
 @import "tailwindcss";
-/* @custom-variant dark (&:where(.dark, .dark *)); */
+@import "@fontsource/roboto";
+@import "@fontsource/roboto/800.css";
 
+/* @custom-variant dark (&:where(.dark, .dark *)); */
 @layer base {
   body {
     @apply font-main-font;
@@ -19,7 +21,7 @@
   /* --spacing-*: initial; */
   /* --radius-*: initial;  */
 
-  --font-main-font: Comic Sans MS, Comic Sans, cursive;
+  --font-main-font: Roboto, Comic Sans MS, Comic Sans, cursive;
 
   /* --font-primary: Helvetica, sans-serif; */
 
@@ -56,6 +58,8 @@
   --color-border: #e0e0e0; /*grey*/
   --color-bg-background: #f6f6f6; /*aka surface? very light grey*/
   --color-bg-header-row: #ebebeb; /* grey*/
+  --color-bg-row-selected: #eaf0fe; /* blueish*/
+  --color-bg-row-hover: #eeeeee; /* blueish*/
   --color-bg-table: #fff;
   --color-bg-disabled: #b1b2b3;
   --color-header-row-text: #949494; /*dark grey*/
@@ -84,6 +88,8 @@
 
   --color-text-body: #ffffff; /* body text: white */
   --color-text-header-row: #cfcfcf; /* light grey */
+  --color-bg-row-selected: #5c6372; /* blueish*/
+  --color-bg-row-hover: #6e6e6e; /* blueish*/
   --color-text-greyed-out: #7d7d7d; /* greyed-out/inactive text */
   --color-text-on-primary-action: #ffffff; /* text on primary buttons: white */
 
@@ -104,6 +110,8 @@
 
   --color-text-body: #1b5e20; /* dark green text for body */
   --color-text-header-row: #388e3c; /* medium green for headers */
+  --color-bg-row-selected: #eafeeb; /* blueish*/
+  --color-bg-row-hover: #eeeeee; /* blueish*/
   --color-text-greyed-out: #81c784; /* light desaturated green */
   --color-text-on-primary-action: #ffffff; /* white text on dark green */
 

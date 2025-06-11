@@ -16,21 +16,12 @@ import type { CompanyDto } from "../../api/SwaggerSdk";
 
 const columns: ColumnDef<CompanyDto>[] = [
   {
-    id: "select",
-    header: "select",
-    cell: ({ row }) => (
-      <div className="px-1">
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          disabled={!row.getCanSelect()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      </div>
-    ),
+    id: "compId",
+    header: "id",
+    cell: ({ row }) => row.id,
   },
   {
-    accessorKey: "companyName", // ✅ Add this
+    accessorKey: "companyName", // makes `cell: (info) => info.getValue()`  work!
 
     id: "name",
     header: "name",
@@ -69,14 +60,13 @@ export const DataTable = ({ data, onRowSelect }: DataTableProps) => {
     state: {
       rowSelection,
     },
-    enableRowSelection: true, //enable row selection for all rows
-    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
+    enableRowSelection: true,
+    enableMultiRowSelection: false,
     onRowSelectionChange: rowChangePreventDeselect,
     getCoreRowModel: getCoreRowModel(),
     // getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
-    enableMultiRowSelection: false,
   });
 
   // TODO: delete later
@@ -91,14 +81,18 @@ export const DataTable = ({ data, onRowSelect }: DataTableProps) => {
   }, [rowSelection, table, onRowSelect]);
 
   return (
-    <div className="bg-amber-400" onClick={() => console.log("log data ", rowSelection)}>
-      <table>
-        <thead>
+    <div className="bg-bg-table text-text-body" onClick={() => console.log("log data ", rowSelection)}>
+      <table className="w-full">
+        <thead className="bg-bg-header-row text-text-header-row ">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    className={`px-4 py-1 ${header.index === 0 ? "w-20" : ""}`}
+                  >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </th>
                 );
@@ -112,10 +106,16 @@ export const DataTable = ({ data, onRowSelect }: DataTableProps) => {
               <tr
                 key={row.id}
                 onClick={row.getToggleSelectedHandler()}
-                className={`${row.getIsSelected() ? "bg-amber-500" : ""}`}
+                className={`${
+                  row.getIsSelected() ? "bg-bg-row-selected" : "hover:bg-bg-row-hover"
+                } border-b-1 border-border  `}
               >
-                {row.getVisibleCells().map((cell) => {
-                  return <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>;
+                {row.getVisibleCells().map((cell, cellIndex) => {
+                  return (
+                    <td key={cell.id} className={`px-4 text-sm py-1 ${cellIndex === 0 ? "text-right" : ""}`}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  );
                 })}
               </tr>
             );
@@ -123,16 +123,9 @@ export const DataTable = ({ data, onRowSelect }: DataTableProps) => {
         </tbody>
         <tfoot>
           <tr>
-            <td className="p-1">
-              <input
-                type="checkbox"
-                {...{
-                  checked: table.getIsAllPageRowsSelected(),
-                  onChange: table.getToggleAllPageRowsSelectedHandler(),
-                }}
-              />
+            <td colSpan={20} className="bg-bg-header-row text-text-header-row p-1">
+              Showing {table.getPreFilteredRowModel().rows.length} results
             </td>
-            <td colSpan={20}>Page Rows ({table.getRowModel().rows.length})</td>
           </tr>
         </tfoot>
       </table>
