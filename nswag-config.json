@@ -37,7 +37,7 @@
       "generateDtoTypes": true,
       "operationGenerationMode": "MultipleClientsFromOperationId",
       "markOptionalProperties": true,
-      "generateCloneMethod": false,
+      "generateCloneMethod": true,
       "typeStyle": "Class",
       "enumStyle": "Enum",
       "useLeafType": false,

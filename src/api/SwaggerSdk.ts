@@ -11,11 +11,11 @@
 export interface ISwaggerSdk {
 
     /**
+     * @param pageIndex (optional) 
      * @param pageSize (optional) 
-     * @param cursor (optional) 
      * @return OK
      */
-    listCompanies(pageSize?: number | undefined, cursor?: string | undefined): Promise<CompanyDto[]>;
+    listCompanies(pageIndex?: number | undefined, pageSize?: number | undefined): Promise<CompaniesResponseOffset>;
 
     /**
      * @return OK
@@ -52,20 +52,20 @@ export class SwaggerSdk implements ISwaggerSdk {
     }
 
     /**
+     * @param pageIndex (optional) 
      * @param pageSize (optional) 
-     * @param cursor (optional) 
      * @return OK
      */
-    listCompanies(pageSize?: number | undefined, cursor?: string | undefined, signal?: AbortSignal): Promise<CompanyDto[]> {
+    listCompanies(pageIndex?: number | undefined, pageSize?: number | undefined, signal?: AbortSignal): Promise<CompaniesResponseOffset> {
         let url_ = this.baseUrl + "/api/Companies?";
+        if (pageIndex === null)
+            throw new Error("The parameter 'pageIndex' cannot be null.");
+        else if (pageIndex !== undefined)
+            url_ += "pageIndex=" + encodeURIComponent("" + pageIndex) + "&";
         if (pageSize === null)
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
             url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
-        if (cursor === null)
-            throw new Error("The parameter 'cursor' cannot be null.");
-        else if (cursor !== undefined)
-            url_ += "cursor=" + encodeURIComponent("" + cursor) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -81,21 +81,14 @@ export class SwaggerSdk implements ISwaggerSdk {
         });
     }
 
-    protected processListCompanies(response: Response): Promise<CompanyDto[]> {
+    protected processListCompanies(response: Response): Promise<CompaniesResponseOffset> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(CompanyDto.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
+            result200 = CompaniesResponseOffset.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -103,7 +96,7 @@ export class SwaggerSdk implements ISwaggerSdk {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<CompanyDto[]>(null as any);
+        return Promise.resolve<CompaniesResponseOffset>(null as any);
     }
 
     /**
@@ -290,6 +283,61 @@ export enum CompClassificationDto {
     GimmeSomeLove = "GimmeSomeLove",
 }
 
+export class CompaniesResponseOffset implements ICompaniesResponseOffset {
+    companies?: CompanyDto[] | undefined;
+    pagination?: PaginationDto;
+
+    constructor(data?: ICompaniesResponseOffset) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["companies"])) {
+                this.companies = [] as any;
+                for (let item of _data["companies"])
+                    this.companies!.push(CompanyDto.fromJS(item));
+            }
+            this.pagination = _data["pagination"] ? PaginationDto.fromJS(_data["pagination"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CompaniesResponseOffset {
+        data = typeof data === 'object' ? data : {};
+        let result = new CompaniesResponseOffset();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.companies)) {
+            data["companies"] = [];
+            for (let item of this.companies)
+                data["companies"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["pagination"] = this.pagination ? this.pagination.toJSON() : <any>undefined;
+        return data;
+    }
+
+    clone(): CompaniesResponseOffset {
+        const json = this.toJSON();
+        let result = new CompaniesResponseOffset();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICompaniesResponseOffset {
+    companies?: CompanyDto[] | undefined;
+    pagination?: PaginationDto;
+}
+
 export class CompanyDto implements ICompanyDto {
     id?: number;
     companyName?: string | undefined;
@@ -352,6 +400,13 @@ export class CompanyDto implements ICompanyDto {
         data["bigFishScore"] = this.bigFishScore;
         data["classification"] = this.classification;
         return data;
+    }
+
+    clone(): CompanyDto {
+        const json = this.toJSON();
+        let result = new CompanyDto();
+        result.init(json);
+        return result;
     }
 }
 
@@ -421,6 +476,13 @@ export class ContactDto implements IContactDto {
         data["date"] = this.date ? this.date.toISOString() : <any>undefined;
         return data;
     }
+
+    clone(): ContactDto {
+        const json = this.toJSON();
+        let result = new ContactDto();
+        result.init(json);
+        return result;
+    }
 }
 
 export interface IContactDto {
@@ -486,6 +548,13 @@ export class Operation implements IOperation {
         data["value"] = this.value;
         return data;
     }
+
+    clone(): Operation {
+        const json = this.toJSON();
+        let result = new Operation();
+        result.init(json);
+        return result;
+    }
 }
 
 export interface IOperation {
@@ -504,6 +573,57 @@ export enum OperationType {
     Copy = "Copy",
     Test = "Test",
     Invalid = "Invalid",
+}
+
+export class PaginationDto implements IPaginationDto {
+    totalCount?: number;
+    pageIndex?: number;
+    pageSize?: number;
+
+    constructor(data?: IPaginationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            this.pageIndex = _data["pageIndex"];
+            this.pageSize = _data["pageSize"];
+        }
+    }
+
+    static fromJS(data: any): PaginationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        data["pageIndex"] = this.pageIndex;
+        data["pageSize"] = this.pageSize;
+        return data;
+    }
+
+    clone(): PaginationDto {
+        const json = this.toJSON();
+        let result = new PaginationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPaginationDto {
+    totalCount?: number;
+    pageIndex?: number;
+    pageSize?: number;
 }
 
 export class SwaggerException extends Error {

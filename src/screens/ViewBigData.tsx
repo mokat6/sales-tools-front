@@ -1,19 +1,20 @@
 import { KeyValue } from "../components/KeyValue";
-import { DataTable } from "../components/dataTables/DataTable";
 import ClassificationSelector from "../components/ClassificationSelector";
 import DeleteCompButton from "../components/DeleteCompButton";
 import { useState } from "react";
 import { Spinner } from "../components/Spinner";
-import useCompanies from "../hooks/company/useCompanies";
 import useCompany from "../hooks/company/useCompany";
 import formatCompany from "../format/formatCompany";
+import { DataTableOffset } from "../components/dataTables/DataTableOffset";
+import { useCompaniesTableData } from "../hooks/company/useCompaniesTableData";
 
 function ViewBigData() {
   const [selectedCompanyId, setSelectedCompanyId] = useState<number>();
-  const { data, isLoading } = useCompanies();
+  // const { isLoading, pagination, companies } = useCompanies();
+  const { companies, pagination, isLoading } = useCompaniesTableData();
   const selectedCompany = useCompany(selectedCompanyId);
 
-  if (isLoading || !data) {
+  if (isLoading || !companies || !pagination) {
     return (
       <div className="flex justify-center items-center h-full">
         <Spinner size="lg" />
@@ -25,7 +26,7 @@ function ViewBigData() {
     <>
       <div className="flex gap-20  items-start pt-6 bg-bg-background">
         <section className="">
-          <DataTable data={data} onRowSelect={setSelectedCompanyId} />
+          <DataTableOffset data={companies} pagination={pagination} onRowSelect={setSelectedCompanyId} />
         </section>
         <section className="flex flex-col gap-5">
           <div className="flex flex-col text-text-body">
@@ -36,7 +37,7 @@ function ViewBigData() {
           <ClassificationSelector id={selectedCompanyId} value={selectedCompany?.classification} />
 
           <DeleteCompButton companyId={selectedCompanyId} />
-          <h1 onClick={() => console.log(data)}>Popover soon</h1>
+          <h1 onClick={() => console.log(companies)}>Popover soon</h1>
         </section>
         <section className="">
           <KeyValue keyTitle="Key" valueTitle="Value" data={formatCompany(selectedCompany)} />

@@ -19,7 +19,8 @@ const swaggerSdk = new SwaggerSdk(BASE_URL, { fetch: myFetch });
 
 export const apiClient = {
   // getCompanies: swaggerSdk.listCompanies,  // won't work because "this" loses context in the class method
-  getCompanies: async () => swaggerSdk.listCompanies(),
+  getCompanies: async ({ pageIndex, pageSize }: { pageIndex?: number; pageSize?: number }) =>
+    swaggerSdk.listCompanies(pageIndex, pageSize),
   getContacts: async (compId: number) => await swaggerSdk.getCompanyContacts(compId),
   deleteCompany: async (compId: number) => await swaggerSdk.deleteCompany(compId),
   patchCompany: async ({ compId, body }: { compId: number; body: ICompanyDto }) => {

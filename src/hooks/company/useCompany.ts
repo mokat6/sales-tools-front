@@ -1,10 +1,18 @@
 import { useQueryClient } from "@tanstack/react-query";
-import type { CompanyDto } from "../../api/SwaggerSdk";
+import type { CompaniesResponseOffset } from "../../api/SwaggerSdk";
 
 export default function useCompany(id: number | undefined) {
   const queryClient = useQueryClient();
 
   if (!id) return;
+  // console.log("CompanIES arrays > ", queryClient.getQueriesData<CompaniesResponseOffset>({ queryKey: ["companies"] }));
 
-  return queryClient.getQueryData<CompanyDto[]>(["companiz"])?.find((company) => company.id === id);
+  const queries = queryClient.getQueriesData<CompaniesResponseOffset>({ queryKey: ["companies"] });
+
+  for (const [, data] of queries) {
+    const company = data?.companies?.find((c) => c.id === id);
+    if (company) return company;
+  }
+
+  return undefined;
 }
