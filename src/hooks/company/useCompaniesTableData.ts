@@ -12,10 +12,10 @@ export type Pagination = {
 
 // useCompanies + TableData
 export const useCompaniesTableData = () => {
-  const [pageIndex, setPageIndex] = useState(1);
+  const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(20);
 
-  const { data, isLoading, error, isFetching } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["companies", pageIndex, pageSize],
     queryFn: () => apiClient.getCompanies({ pageIndex: pageIndex, pageSize: pageSize }),
     placeholderData: keepPreviousData,
@@ -32,7 +32,7 @@ export const useCompaniesTableData = () => {
 
   return {
     companies: data?.companies ?? [],
-    isLoading: isLoading || isFetching,
+    isLoading: isLoading,
     error,
     pagination,
   };

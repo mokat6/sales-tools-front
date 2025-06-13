@@ -1,15 +1,4 @@
-import {
-  type Column,
-  type ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  type Row,
-  type Table,
-  type Updater,
-  useReactTable,
-} from "@tanstack/react-table";
+import { type ColumnDef, flexRender, getCoreRowModel, type Updater, useReactTable } from "@tanstack/react-table";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import type { CompanyDto } from "../../api/SwaggerSdk";
@@ -44,19 +33,6 @@ export const DataTableOffset = ({ data, onRowSelect, pagination }: DataTableOffs
   });
   const [globalFilter, setGlobalFilter] = useState("");
 
-  // useEffect(() => {
-  //   setTotalPages(Math.ceil(pagination.totalCount / pageSize));
-  // }, [pagination.totalCount, pageSize]);
-
-  // const setPagination = (updater: Updater<{ pageIndex: number; pageSize: number }>) => {
-  //   const newPagination = typeof updater === "function" ? updater({ pageIndex, pageSize }) : updater;
-
-  //   setPageIndex(newPagination.pageIndex);
-  //   setPageSize(newPagination.pageSize);
-  // };
-
-  // ------
-
   const rowChangePreventDeselect = (newSelection: Updater<Record<string, boolean>>) => {
     const updatedSelection = typeof newSelection === "function" ? newSelection({}) : newSelection;
     if (Object.keys(updatedSelection).length === 0) return;
@@ -88,7 +64,6 @@ export const DataTableOffset = ({ data, onRowSelect, pagination }: DataTableOffs
         typeof updater === "function"
           ? updater({ pageIndex: pagination.pageIndex, pageSize: pagination.pageSize })
           : updater;
-
       pagination.setPageIndex(next.pageIndex);
       pagination.setPageSize(next.pageSize);
     },
