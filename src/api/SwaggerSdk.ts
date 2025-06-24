@@ -18,6 +18,13 @@ export interface ISwaggerSdk {
     listCompanies(pageIndex?: number | undefined, pageSize?: number | undefined): Promise<CompaniesResponseOffset>;
 
     /**
+     * @param pageSize (optional) 
+     * @param cursor (optional) 
+     * @return OK
+     */
+    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined): Promise<CompaniesResponseCursor>;
+
+    /**
      * @return OK
      */
     deleteCompany(id: number): Promise<void>;
@@ -97,6 +104,54 @@ export class SwaggerSdk implements ISwaggerSdk {
             });
         }
         return Promise.resolve<CompaniesResponseOffset>(null as any);
+    }
+
+    /**
+     * @param pageSize (optional) 
+     * @param cursor (optional) 
+     * @return OK
+     */
+    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, signal?: AbortSignal): Promise<CompaniesResponseCursor> {
+        let url_ = this.baseUrl + "/api/Companies/cursor?";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (cursor === null)
+            throw new Error("The parameter 'cursor' cannot be null.");
+        else if (cursor !== undefined)
+            url_ += "cursor=" + encodeURIComponent("" + cursor) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            signal,
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processListCompaninesWithCursor(_response);
+        });
+    }
+
+    protected processListCompaninesWithCursor(response: Response): Promise<CompaniesResponseCursor> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CompaniesResponseCursor.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<CompaniesResponseCursor>(null as any);
     }
 
     /**
@@ -281,6 +336,61 @@ export enum CompClassificationDto {
     FuckYou = "FuckYou",
     Ecommerce = "Ecommerce",
     GimmeSomeLove = "GimmeSomeLove",
+}
+
+export class CompaniesResponseCursor implements ICompaniesResponseCursor {
+    companies?: CompanyDto[] | undefined;
+    pagination?: PaginationCursorDto;
+
+    constructor(data?: ICompaniesResponseCursor) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["companies"])) {
+                this.companies = [] as any;
+                for (let item of _data["companies"])
+                    this.companies!.push(CompanyDto.fromJS(item));
+            }
+            this.pagination = _data["pagination"] ? PaginationCursorDto.fromJS(_data["pagination"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CompaniesResponseCursor {
+        data = typeof data === 'object' ? data : {};
+        let result = new CompaniesResponseCursor();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.companies)) {
+            data["companies"] = [];
+            for (let item of this.companies)
+                data["companies"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["pagination"] = this.pagination ? this.pagination.toJSON() : <any>undefined;
+        return data;
+    }
+
+    clone(): CompaniesResponseCursor {
+        const json = this.toJSON();
+        let result = new CompaniesResponseCursor();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICompaniesResponseCursor {
+    companies?: CompanyDto[] | undefined;
+    pagination?: PaginationCursorDto;
 }
 
 export class CompaniesResponseOffset implements ICompaniesResponseOffset {
@@ -573,6 +683,53 @@ export enum OperationType {
     Copy = "Copy",
     Test = "Test",
     Invalid = "Invalid",
+}
+
+export class PaginationCursorDto implements IPaginationCursorDto {
+    totalCount?: number;
+    nextCursor?: string | undefined;
+
+    constructor(data?: IPaginationCursorDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalCount = _data["totalCount"];
+            this.nextCursor = _data["nextCursor"];
+        }
+    }
+
+    static fromJS(data: any): PaginationCursorDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginationCursorDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalCount"] = this.totalCount;
+        data["nextCursor"] = this.nextCursor;
+        return data;
+    }
+
+    clone(): PaginationCursorDto {
+        const json = this.toJSON();
+        let result = new PaginationCursorDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPaginationCursorDto {
+    totalCount?: number;
+    nextCursor?: string | undefined;
 }
 
 export class PaginationDto implements IPaginationDto {

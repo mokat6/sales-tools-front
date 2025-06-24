@@ -12,12 +12,14 @@
     "nswag": "nswag run nswag-config.json"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.8.0",
     "@fontsource/roboto": "^5.2.6",
     "@radix-ui/react-icons": "^1.3.2",
     "@tailwindcss/vite": "^4.1.6",
     "@tanstack/react-query": "^5.79.0",
     "@tanstack/react-query-devtools": "^5.79.0",
     "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-virtual": "^3.13.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.509.0",

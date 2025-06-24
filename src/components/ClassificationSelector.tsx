@@ -1,7 +1,7 @@
 import { Select } from "./Select";
 import { CompClassificationDto } from "../api/SwaggerSdk";
 import { compClassificationOptions } from "../api/ApiTypes";
-import useUpdateClassification from "../hooks/company/useUpdateClassification";
+import { useUpdateClassification_infinityCursor } from "../hooks/company/useUpdateClassification";
 
 type ClassificationSelectorProps = {
   id?: number;
@@ -15,7 +15,7 @@ const options = Object.entries(compClassificationOptions).map(([key, value]) => 
 }));
 
 export default function ClassificationSelector({ id, value }: ClassificationSelectorProps) {
-  const mutation = useUpdateClassification();
+  const mutation = useUpdateClassification_infinityCursor();
 
   const onValueChange = (newClassification: CompClassificationDto) => {
     console.log("new option valye", newClassification);
