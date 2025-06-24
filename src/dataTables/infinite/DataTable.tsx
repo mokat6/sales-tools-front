@@ -9,15 +9,33 @@ export type DataTableProps = {
   isFetching: boolean;
   fetchNextPage: () => void;
   totalDbRowCount: number;
+  filter: {
+    globalFilter: string;
+    setGlobalFilter: React.Dispatch<React.SetStateAction<string>>;
+  };
 };
 
 export const DataTable = (props: DataTableProps) => {
   const tableContainerRef = React.useRef<HTMLDivElement>(null);
-  const { totalFetched, rows, table, rowVirtualizer, totalDbRowCount, fetchMoreOnBottomReached } =
-    useDataTablePresenter({ ...props, tableContainerRef });
+  const {
+    totalFetched,
+    rows,
+    table,
+    rowVirtualizer,
+    totalDbRowCount,
+    fetchMoreOnBottomReached,
+    globalFilter,
+    setGlobalFilter,
+  } = useDataTablePresenter({ ...props, tableContainerRef });
 
   return (
     <div className="bg-bg-table text-text-body">
+      <input
+        type="text"
+        placeholder="Search companies..."
+        value={globalFilter}
+        onChange={(e) => setGlobalFilter(e.target.value)}
+      />
       {/* Header */}
       <div className="font-bold grid grid-cols-[70px_1fr]">
         {table.getHeaderGroups().map((headerGroup) =>

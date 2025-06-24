@@ -14,13 +14,12 @@ export function useDataTablePresenter({
   isFetching,
   totalDbRowCount,
   tableContainerRef,
+  filter,
 }: useDataTablePresenterProps) {
   const [rowSelection, setRowSelection] = useState(() => {
     if (companies.length === 0) return {};
     return { [companies[0].id ?? "0"]: true };
   });
-
-  //   const [globalFilter, setGlobalFilter] = useState("");
 
   const totalFetched = companies.length;
 
@@ -100,5 +99,7 @@ export function useDataTablePresenter({
     rowVirtualizer,
     totalDbRowCount,
     fetchMoreOnBottomReached,
+    globalFilter: filter.globalFilter,
+    setGlobalFilter: filter.setGlobalFilter,
   };
 }

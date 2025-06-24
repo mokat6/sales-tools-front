@@ -20,9 +20,10 @@ export interface ISwaggerSdk {
     /**
      * @param pageSize (optional) 
      * @param cursor (optional) 
+     * @param search (optional) 
      * @return OK
      */
-    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined): Promise<CompaniesResponseCursor>;
+    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined): Promise<CompaniesResponseCursor>;
 
     /**
      * @return OK
@@ -109,9 +110,10 @@ export class SwaggerSdk implements ISwaggerSdk {
     /**
      * @param pageSize (optional) 
      * @param cursor (optional) 
+     * @param search (optional) 
      * @return OK
      */
-    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, signal?: AbortSignal): Promise<CompaniesResponseCursor> {
+    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined, signal?: AbortSignal): Promise<CompaniesResponseCursor> {
         let url_ = this.baseUrl + "/api/Companies/cursor?";
         if (pageSize === null)
             throw new Error("The parameter 'pageSize' cannot be null.");
@@ -121,6 +123,10 @@ export class SwaggerSdk implements ISwaggerSdk {
             throw new Error("The parameter 'cursor' cannot be null.");
         else if (cursor !== undefined)
             url_ += "cursor=" + encodeURIComponent("" + cursor) + "&";
+        if (search === null)
+            throw new Error("The parameter 'search' cannot be null.");
+        else if (search !== undefined)
+            url_ += "search=" + encodeURIComponent("" + search) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
