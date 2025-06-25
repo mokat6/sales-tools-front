@@ -21,9 +21,11 @@ export interface ISwaggerSdk {
      * @param pageSize (optional) 
      * @param cursor (optional) 
      * @param search (optional) 
+     * @param sortBy (optional) 
+     * @param sortDirection (optional) 
      * @return OK
      */
-    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined): Promise<CompaniesResponseCursor>;
+    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined, sortBy?: string | undefined, sortDirection?: string | undefined): Promise<CompaniesResponseCursor>;
 
     /**
      * @return OK
@@ -111,9 +113,11 @@ export class SwaggerSdk implements ISwaggerSdk {
      * @param pageSize (optional) 
      * @param cursor (optional) 
      * @param search (optional) 
+     * @param sortBy (optional) 
+     * @param sortDirection (optional) 
      * @return OK
      */
-    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined, signal?: AbortSignal): Promise<CompaniesResponseCursor> {
+    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined, sortBy?: string | undefined, sortDirection?: string | undefined, signal?: AbortSignal): Promise<CompaniesResponseCursor> {
         let url_ = this.baseUrl + "/api/Companies/cursor?";
         if (pageSize === null)
             throw new Error("The parameter 'pageSize' cannot be null.");
@@ -127,6 +131,14 @@ export class SwaggerSdk implements ISwaggerSdk {
             throw new Error("The parameter 'search' cannot be null.");
         else if (search !== undefined)
             url_ += "search=" + encodeURIComponent("" + search) + "&";
+        if (sortBy === null)
+            throw new Error("The parameter 'sortBy' cannot be null.");
+        else if (sortBy !== undefined)
+            url_ += "sortBy=" + encodeURIComponent("" + sortBy) + "&";
+        if (sortDirection === null)
+            throw new Error("The parameter 'sortDirection' cannot be null.");
+        else if (sortDirection !== undefined)
+            url_ += "sortDirection=" + encodeURIComponent("" + sortDirection) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {

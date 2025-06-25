@@ -1,4 +1,4 @@
-import { flexRender } from "@tanstack/react-table";
+import { flexRender, type SortingState } from "@tanstack/react-table";
 import type { CompanyDto } from "../../api/SwaggerSdk";
 import { useDataTablePresenter } from "./dataTable.presenter";
 import React from "react";
@@ -12,6 +12,10 @@ export type DataTableProps = {
   filter: {
     globalFilter: string;
     setGlobalFilter: React.Dispatch<React.SetStateAction<string>>;
+  };
+  sort: {
+    sorting: SortingState;
+    setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
   };
 };
 
@@ -41,8 +45,16 @@ export const DataTable = (props: DataTableProps) => {
         {table.getHeaderGroups().map((headerGroup) =>
           headerGroup.headers.map((header) => {
             return (
-              <div key={header.id} className={`px-4 py-1 border`}>
+              <div
+                key={header.id}
+                className={`px-4 py-1 border cursor-pointer select-none`}
+                onClick={header.column.getToggleSortingHandler()}
+              >
                 {flexRender(header.column.columnDef.header, header.getContext())}
+                {{
+                  asc: " 🔼",
+                  desc: " 🔽",
+                }[header.column.getIsSorted() as string] ?? null}
               </div>
             );
           })

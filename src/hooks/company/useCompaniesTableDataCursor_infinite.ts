@@ -4,13 +4,26 @@ import React, { useState } from "react";
 
 const PAGE_SIZE = 15;
 
+export type SortingState = {
+  id: string; // column ID
+  desc: boolean;
+}[];
+
 export const useCompaniesTableDataCursor_infinite = (pageSize: number = PAGE_SIZE) => {
   const [globalFilter, setGlobalFilter] = useState("");
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const sortOne = sorting[0];
 
   const { data, fetchNextPage, isLoading, hasNextPage, isFetching } = useInfiniteQuery({
-    queryKey: ["companies-infinite-cursor", globalFilter],
+    queryKey: ["companies-infinite-cursor", globalFilter, sortOne?.id, sortOne?.desc],
     queryFn: ({ pageParam }) =>
-      apiClient.getCompaniesCursor({ cursor: pageParam, pageSize: pageSize, search: globalFilter }),
+      apiClient.getCompaniesCursor({
+        cursor: pageParam,
+        pageSize: pageSize,
+        search: globalFilter,
+        sortBy: sortOne?.id,
+        sortDirection: sortOne?.desc ? "desc" : "asc",
+      }),
     initialPageParam: "",
     getNextPageParam: (last) => last.pagination?.nextCursor,
     // refetchOnWindowFocus: false,
@@ -30,6 +43,10 @@ export const useCompaniesTableDataCursor_infinite = (pageSize: number = PAGE_SIZ
     filter: {
       globalFilter,
       setGlobalFilter,
+    },
+    sort: {
+      sorting,
+      setSorting,
     },
   };
 };

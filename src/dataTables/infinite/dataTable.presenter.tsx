@@ -15,6 +15,7 @@ export function useDataTablePresenter({
   totalDbRowCount,
   tableContainerRef,
   filter,
+  sort: { sorting, setSorting },
 }: useDataTablePresenterProps) {
   const [rowSelection, setRowSelection] = useState(() => {
     if (companies.length === 0) return {};
@@ -31,6 +32,13 @@ export function useDataTablePresenter({
     setRowSelection(updatedSelection);
   };
 
+  const sort_n_fuck = (param) => {
+    const lolz = typeof param === "function" ? param(sorting) : param;
+
+    console.log("SORT CLICKED > PARAM > ", lolz);
+    setSorting(lolz);
+  };
+
   const table = useReactTable<CompanyDto>({
     data: companies,
     columns,
@@ -41,6 +49,7 @@ export function useDataTablePresenter({
     // state is where you manually control parts of the table's internal state, instead of letting the table manage them
     state: {
       rowSelection,
+      sorting,
     },
     enableRowSelection: true,
     enableMultiRowSelection: false,
@@ -49,6 +58,9 @@ export function useDataTablePresenter({
     // manualPagination: true,
     // getFilteredRowModel: getFilteredRowModel(),
     // getPaginationRowModel: getPaginationRowModel(),
+    manualSorting: true, // SERVER-SIDE sorting
+    enableMultiSort: false,
+    onSortingChange: sort_n_fuck,
     getCoreRowModel: getCoreRowModel(),
     debugTable: true,
   });

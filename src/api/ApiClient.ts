@@ -21,8 +21,8 @@ export const apiClient = {
   // getCompanies: swaggerSdk.listCompanies,  // won't work because "this" loses context in the class method
   getCompanies: async ({ pageIndex, pageSize }: { pageIndex?: number; pageSize?: number }) =>
     swaggerSdk.listCompanies(pageIndex, pageSize),
-  getCompaniesCursor: async (params?: { pageSize?: number; cursor?: string; search?: string }) =>
-    swaggerSdk.listCompaninesWithCursor(params?.pageSize, params?.cursor, params?.search),
+  getCompaniesCursor: async (p?: getCompaniesCursorProps) =>
+    swaggerSdk.listCompaninesWithCursor(p?.pageSize, p?.cursor, p?.search, p?.sortBy, p?.sortDirection),
   getContacts: async (compId: number) => await swaggerSdk.getCompanyContacts(compId),
   deleteCompany: async (compId: number) => await swaggerSdk.deleteCompany(compId),
   patchCompany: async ({ compId, body }: { compId: number; body: ICompanyDto }) => {
@@ -30,4 +30,12 @@ export const apiClient = {
     return await swaggerSdk.patchCompany(compId, dtoToJsonPatchOperations(body));
   },
   getCompany: async (compId: number) => swaggerSdk.getCompany(compId),
+};
+
+type getCompaniesCursorProps = {
+  pageSize?: number;
+  cursor?: string;
+  search?: string;
+  sortBy?: string;
+  sortDirection?: string;
 };
