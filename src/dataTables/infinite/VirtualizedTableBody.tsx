@@ -30,7 +30,6 @@ export const VirtualizedTableBody = ({
   return (
     <div
       className="overflow-auto relative w-full h-full"
-      //   onScroll={(e) => fetchMoreOnBottomReached(e.currentTarget)}
       ref={scrollingTableContainerRef}
       onScroll={(e) => fetchMoreOnBottomReached(e.currentTarget)}
     >

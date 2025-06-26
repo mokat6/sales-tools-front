@@ -27,13 +27,6 @@ export function useDataTablePresenter({ onRowSelect }: useDataTablePresenterProp
     setRowSelection(updatedSelection);
   };
 
-  const sort_n_fuck = (param) => {
-    const lolz = typeof param === "function" ? param(sorting) : param;
-
-    console.log("SORT CLICKED > PARAM > ", lolz);
-    setSorting(lolz);
-  };
-
   const table = useReactTable<CompanyDto>({
     data: companies,
     columns,
@@ -55,7 +48,7 @@ export function useDataTablePresenter({ onRowSelect }: useDataTablePresenterProp
     // getPaginationRowModel: getPaginationRowModel(),
     manualSorting: true, // SERVER-SIDE sorting
     enableMultiSort: false,
-    onSortingChange: sort_n_fuck,
+    onSortingChange: setSorting, // the sorting data is [{colId, isDesc}], always 0 or 1 item in [] when enableMultiSort: false
     getCoreRowModel: getCoreRowModel(),
     debugTable: true,
   });
