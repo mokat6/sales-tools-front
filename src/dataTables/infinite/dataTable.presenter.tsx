@@ -4,23 +4,27 @@ import type { CompanyDto } from "../../api/SwaggerSdk";
 import { columns } from "./columns";
 import { useCallback, useEffect, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { useCompaniesTableDataCursor_infinite } from "../../hooks/company/useCompaniesTableDataCursor_infinite";
 
 type useDataTablePresenterProps = DataTableProps & { tableContainerRef: React.RefObject<HTMLDivElement | null> };
 
 export function useDataTablePresenter({
   onRowSelect,
-  companies,
-  fetchNextPage,
-  isFetching,
-  totalDbRowCount,
+
   tableContainerRef,
-  filter,
-  sort: { sorting, setSorting },
 }: useDataTablePresenterProps) {
-  const [rowSelection, setRowSelection] = useState(() => {
-    if (companies.length === 0) return {};
-    return { [companies[0].id ?? "0"]: true };
-  });
+  const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
+
+  const {
+    companies,
+    totalDbRowCount,
+    isLoading,
+    isFetching,
+    hasNextPage,
+    fetchNextPage,
+    filter,
+    sort: { sorting, setSorting },
+  } = useCompaniesTableDataCursor_infinite(37);
 
   const totalFetched = companies.length;
 

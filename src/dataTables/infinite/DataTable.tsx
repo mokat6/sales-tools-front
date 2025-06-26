@@ -4,19 +4,7 @@ import { useDataTablePresenter } from "./dataTable.presenter";
 import React from "react";
 
 export type DataTableProps = {
-  companies: CompanyDto[];
   onRowSelect: (row: number | undefined) => void;
-  isFetching: boolean;
-  fetchNextPage: () => void;
-  totalDbRowCount: number;
-  filter: {
-    globalFilter: string;
-    setGlobalFilter: React.Dispatch<React.SetStateAction<string>>;
-  };
-  sort: {
-    sorting: SortingState;
-    setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
-  };
 };
 
 export const DataTable = (props: DataTableProps) => {

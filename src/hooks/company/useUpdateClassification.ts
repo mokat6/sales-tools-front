@@ -94,9 +94,10 @@ export function useUpdateClassification_infinityCursor() {
         pageParams: unknown[];
       }>(context.queryKey, context.previousData);
     },
-    onSuccess: (returnedCompany) => {
+    onSuccess: (returnedCompany, variables) => {
       console.log("classification update success: ", returnedCompany);
       // queryClient.setQueryData   ... update with returnedCompany if needed
+      queryClient.invalidateQueries({ queryKey: ["company-from-cached-list", variables.compId] });
     },
   });
 }
