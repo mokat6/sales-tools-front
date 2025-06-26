@@ -2,23 +2,23 @@ import { getCoreRowModel, type SortingState, type Updater, useReactTable } from 
 import type { DataTableProps } from "./DataTable";
 import type { CompanyDto } from "../../api/SwaggerSdk";
 import { columns } from "./columns";
-import { useCallback, useEffect, useState } from "react";
-import { useVirtualizer } from "@tanstack/react-virtual";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useCompaniesTableDataCursor_infinite } from "../../hooks/company/useCompaniesTableDataCursor_infinite";
 
-type useDataTablePresenterProps = DataTableProps & { tableContainerRef: React.RefObject<HTMLDivElement | null> };
-const PAGE_SIZE = 37;
+type useDataTablePresenterProps = DataTableProps;
+const PAGE_SIZE = 12;
 
-export function useDataTablePresenter({ onRowSelect, tableContainerRef }: useDataTablePresenterProps) {
+export function useDataTablePresenter({ onRowSelect }: useDataTablePresenterProps) {
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
+  const scrollingTableContainerRef = useRef<HTMLDivElement>(null);
 
   const { companies, totalDbRowCount, isLoading, isFetching, hasNextPage, fetchNextPage } =
     useCompaniesTableDataCursor_infinite({ pageSize: PAGE_SIZE, columnSort: sorting[0], globalFilter });
 
   const totalFetched = companies.length;
-  console.log("HAS NEXT PAGE: ", hasNextPage);
+
   const rowChangePreventDeselect = (newSelection: Updater<Record<string, boolean>>) => {
     const updatedSelection = typeof newSelection === "function" ? newSelection({}) : newSelection;
     if (Object.keys(updatedSelection).length === 0) return;
@@ -84,30 +84,20 @@ export function useDataTablePresenter({ onRowSelect, tableContainerRef }: useDat
 
   //a check on mount and after a fetch to see if the table is already scrolled to the bottom and immediately needs to fetch more data
   useEffect(() => {
-    fetchMoreOnBottomReached(tableContainerRef.current);
-  }, [fetchMoreOnBottomReached, tableContainerRef]);
+    fetchMoreOnBottomReached(scrollingTableContainerRef.current);
+  }, [fetchMoreOnBottomReached, scrollingTableContainerRef]);
 
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    estimateSize: () => 25, //estimate row height for accurate scrollbar dragging
-    getScrollElement: () => tableContainerRef.current,
-    //measure dynamic row height, except in firefox because it measures table border height incorrectly
-    measureElement:
-      typeof window !== "undefined" && navigator.userAgent.indexOf("Firefox") === -1
-        ? (element) => element?.getBoundingClientRect().height
-        : undefined,
-    overscan: 5,
-  });
-
+  console.log("presenter renders");
   return {
     totalFetched,
     rows,
     table,
-    rowVirtualizer,
+    // rowVirtualizer,
     totalDbRowCount,
     fetchMoreOnBottomReached,
     globalFilter: globalFilter,
     setGlobalFilter: setGlobalFilter,
     isLoading,
+    scrollingTableContainerRef,
   };
 }

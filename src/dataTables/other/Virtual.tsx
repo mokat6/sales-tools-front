@@ -1,37 +1,59 @@
 import * as React from "react";
 import { faker } from "@faker-js/faker";
-
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 const sentences = new Array(300).fill(true).map(() => faker.lorem.sentence(faker.number.int({ min: 10, max: 70 })));
 
 export default function Virtual() {
+  // 👇 Logs only once now
+  console.log("Virtual parent rendered");
+
+  return (
+    <div
+      className="List"
+      style={{
+        height: 400,
+        width: 400,
+      }}
+    >
+      <VirtualListBody sentences={sentences} />
+    </div>
+  );
+}
+
+type VirtualListBodyProps = {
+  // parentRef: React.RefObject<HTMLDivElement | null>;
+  sentences: string[];
+};
+
+const VirtualListBody = ({ sentences }: VirtualListBodyProps) => {
   const parentRef = React.useRef<HTMLDivElement>(null);
 
   const count = sentences.length;
   const virtualizer = useVirtualizer({
     count,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 10,
+    estimateSize: () => 50,
+    overscan: 5,
   });
 
   const items = virtualizer.getVirtualItems();
-
-  window.__virt = virtualizer;
+  const totalSize = virtualizer.getTotalSize();
+  console.log("VirtualListBody rendered");
 
   return (
     <div
       ref={parentRef}
       className="List"
       style={{
-        height: 400,
-        width: 400,
+        height: "100%",
+        width: "100%",
         overflowY: "auto",
       }}
     >
       <div
         style={{
-          height: virtualizer.getTotalSize(),
+          height: totalSize,
           width: "100%",
           position: "relative",
         }}
@@ -64,4 +86,4 @@ export default function Virtual() {
       </div>
     </div>
   );
-}
+};
