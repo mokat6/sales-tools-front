@@ -1,7 +1,7 @@
-import { flexRender, type SortingState } from "@tanstack/react-table";
-import type { CompanyDto } from "../../api/SwaggerSdk";
+import { flexRender } from "@tanstack/react-table";
 import { useDataTablePresenter } from "./dataTable.presenter";
 import React from "react";
+import { Spinner } from "../../components/Spinner";
 
 export type DataTableProps = {
   onRowSelect: (row: number | undefined) => void;
@@ -18,39 +18,20 @@ export const DataTable = (props: DataTableProps) => {
     fetchMoreOnBottomReached,
     globalFilter,
     setGlobalFilter,
+    isLoading,
   } = useDataTablePresenter({ ...props, tableContainerRef });
 
-  return (
-    <div className="bg-bg-table text-text-body">
-      <input
-        type="text"
-        placeholder="Search companies..."
-        value={globalFilter}
-        onChange={(e) => setGlobalFilter(e.target.value)}
-      />
-      {/* Header */}
-      <div className="font-bold grid grid-cols-[70px_1fr]">
-        {table.getHeaderGroups().map((headerGroup) =>
-          headerGroup.headers.map((header) => {
-            return (
-              <div
-                key={header.id}
-                className={`px-4 py-1 border cursor-pointer select-none`}
-                onClick={header.column.getToggleSortingHandler()}
-              >
-                {flexRender(header.column.columnDef.header, header.getContext())}
-                {{
-                  asc: " 🔼",
-                  desc: " 🔽",
-                }[header.column.getIsSorted() as string] ?? null}
-              </div>
-            );
-          })
-        )}
-      </div>
-      {/* Table Body */}
+  const renderTableBody = () => {
+    if (isLoading)
+      return (
+        <div className="flex justify-center items-center h-full">
+          <Spinner size="lg" />
+        </div>
+      );
+
+    return (
       <div
-        className="overflow-auto relative w-80 h-150"
+        className="overflow-auto relative w-full h-full"
         onScroll={(e) => fetchMoreOnBottomReached(e.currentTarget)}
         ref={tableContainerRef}
       >
@@ -92,6 +73,39 @@ export const DataTable = (props: DataTableProps) => {
           </div>
         </div>
       </div>
+    );
+  };
+
+  return (
+    <div className="bg-bg-table text-text-body">
+      <input
+        type="text"
+        placeholder="Search companies..."
+        value={globalFilter}
+        onChange={(e) => setGlobalFilter(e.target.value)}
+      />
+      {/* Header */}
+      <div className="font-bold grid grid-cols-[70px_1fr]">
+        {table.getHeaderGroups().map((headerGroup) =>
+          headerGroup.headers.map((header) => {
+            return (
+              <div
+                key={header.id}
+                className={`px-4 py-1 border cursor-pointer select-none`}
+                onClick={header.column.getToggleSortingHandler()}
+              >
+                {flexRender(header.column.columnDef.header, header.getContext())}
+                {{
+                  asc: " 🔼",
+                  desc: " 🔽",
+                }[header.column.getIsSorted() as string] ?? null}
+              </div>
+            );
+          })
+        )}
+      </div>
+      {/* Table Body */}
+      <div className=" w-80 h-150">{renderTableBody()}</div>
       {/* Footer */}
       <div className="bg-bg-header-row text-text-header-row p-1">
         Loaded {totalFetched} of {totalDbRowCount} results

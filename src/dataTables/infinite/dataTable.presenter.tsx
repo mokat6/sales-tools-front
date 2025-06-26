@@ -1,4 +1,4 @@
-import { getCoreRowModel, type Updater, useReactTable } from "@tanstack/react-table";
+import { getCoreRowModel, type SortingState, type Updater, useReactTable } from "@tanstack/react-table";
 import type { DataTableProps } from "./DataTable";
 import type { CompanyDto } from "../../api/SwaggerSdk";
 import { columns } from "./columns";
@@ -7,27 +7,18 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { useCompaniesTableDataCursor_infinite } from "../../hooks/company/useCompaniesTableDataCursor_infinite";
 
 type useDataTablePresenterProps = DataTableProps & { tableContainerRef: React.RefObject<HTMLDivElement | null> };
+const PAGE_SIZE = 37;
 
-export function useDataTablePresenter({
-  onRowSelect,
-
-  tableContainerRef,
-}: useDataTablePresenterProps) {
+export function useDataTablePresenter({ onRowSelect, tableContainerRef }: useDataTablePresenterProps) {
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [sorting, setSorting] = useState<SortingState>([]);
 
-  const {
-    companies,
-    totalDbRowCount,
-    isLoading,
-    isFetching,
-    hasNextPage,
-    fetchNextPage,
-    filter,
-    sort: { sorting, setSorting },
-  } = useCompaniesTableDataCursor_infinite(37);
+  const { companies, totalDbRowCount, isLoading, isFetching, hasNextPage, fetchNextPage } =
+    useCompaniesTableDataCursor_infinite({ pageSize: PAGE_SIZE, columnSort: sorting[0], globalFilter });
 
   const totalFetched = companies.length;
-
+  console.log("HAS NEXT PAGE: ", hasNextPage);
   const rowChangePreventDeselect = (newSelection: Updater<Record<string, boolean>>) => {
     const updatedSelection = typeof newSelection === "function" ? newSelection({}) : newSelection;
     if (Object.keys(updatedSelection).length === 0) return;
@@ -115,7 +106,8 @@ export function useDataTablePresenter({
     rowVirtualizer,
     totalDbRowCount,
     fetchMoreOnBottomReached,
-    globalFilter: filter.globalFilter,
-    setGlobalFilter: filter.setGlobalFilter,
+    globalFilter: globalFilter,
+    setGlobalFilter: setGlobalFilter,
+    isLoading,
   };
 }
