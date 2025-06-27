@@ -1,11 +1,12 @@
-import { flexRender } from "@tanstack/react-table";
+import { flexRender, type RowSelectionState } from "@tanstack/react-table";
 import { useDataTablePresenter } from "./dataTable.presenter";
 import React from "react";
 import { Spinner } from "../../components/Spinner";
 import { VirtualizedTableBody } from "./VirtualizedTableBody";
 
 export type DataTableProps = {
-  onRowSelect: (row: number | undefined) => void;
+  rowSelection: RowSelectionState;
+  setRowSelection: React.Dispatch<React.SetStateAction<RowSelectionState>>;
 };
 
 export const DataTable = (props: DataTableProps) => {

@@ -36,10 +36,7 @@ type DataTableProps = {
 };
 
 export const DataTable = ({ data, onRowSelect }: DataTableProps) => {
-  const [rowSelection, setRowSelection] = useState(() => {
-    if (data.length === 0) return {};
-    return { [data[0].id ?? "0"]: true };
-  });
+  const [rowSelection, setRowSelection] = useState();
   const [globalFilter, setGlobalFilter] = useState("");
 
   const rowChangePreventDeselect = (newSelection: Updater<Record<string, boolean>>) => {

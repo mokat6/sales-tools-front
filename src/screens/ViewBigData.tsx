@@ -5,16 +5,22 @@ import { useState } from "react";
 import { useCompany_InfinityCursor } from "../hooks/company/useCompany";
 import formatCompany from "../format/formatCompany";
 import { DataTable } from "../dataTables/infinite/DataTable";
+import type { RowSelectionState } from "@tanstack/react-table";
 
 function ViewBigData() {
-  const [selectedCompanyId, setSelectedCompanyId] = useState<number>();
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
+  const selectedCompanyIdString: string | undefined = Object.keys(rowSelection)[0];
+  const selectedCompanyId = selectedCompanyIdString ? Number(selectedCompanyIdString) : undefined;
+
   const { data: selectedCompany } = useCompany_InfinityCursor(selectedCompanyId);
 
+  console.log("Rendering +++++++ .... ViewBigData");
   return (
     <>
       <div className="flex gap-20  items-start pt-6 bg-bg-background">
         <section className="">
-          <DataTable onRowSelect={setSelectedCompanyId} />
+          <DataTable rowSelection={rowSelection} setRowSelection={setRowSelection} />
         </section>
         <section className="flex flex-col gap-5">
           <div className="flex flex-col text-text-body">

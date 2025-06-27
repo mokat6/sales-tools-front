@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { apiClient } from "../../api/ApiClient";
 import { CompanyDto, type ICompaniesResponseCursor, type ICompaniesResponseOffset } from "../../api/SwaggerSdk";
 
@@ -56,10 +56,7 @@ export function useUpdateClassification_infinityCursor() {
     onMutate: async ({ compId, body }) => {
       await queryClient.cancelQueries({ queryKey: ["companies-infinite-cursor"] });
 
-      const previousQueries = queryClient.getQueriesData<{
-        pages: ICompaniesResponseCursor[];
-        pageParams: unknown[];
-      }>({
+      const previousQueries = queryClient.getQueriesData<InfiniteData<ICompaniesResponseCursor>>({
         queryKey: ["companies-infinite-cursor"],
       });
 

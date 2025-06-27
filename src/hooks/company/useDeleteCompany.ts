@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { apiClient } from "../../api/ApiClient";
-import type { CompanyDto } from "../../api/SwaggerSdk";
+import type { CompaniesResponseOffset, CompanyDto, ICompaniesResponseCursor } from "../../api/SwaggerSdk";
 
 export default function useDeleteCompany() {
   const queryClient = useQueryClient();
@@ -8,18 +8,29 @@ export default function useDeleteCompany() {
     mutationFn: apiClient.deleteCompany,
 
     onMutate: async (deletedId: number) => {
-      await queryClient.cancelQueries({ queryKey: ["companiz"] });
+      await queryClient.cancelQueries({ queryKey: ["companies-infinite-cursor"] });
 
-      const prevData = queryClient.getQueryData<CompanyDto[]>(["companiz"]);
+      const previousQueries = queryClient.getQueriesData<InfiniteData<ICompaniesResponseCursor>>({
+        queryKey: ["companies-infinite-cursor"],
+      });
 
-      queryClient.setQueryData(["companiz"], (old: CompanyDto[]) => old?.filter((c) => c.id !== deletedId));
+      for (const [queryKey, data] of previousQueries) {
+        if (!data) continue;
 
-      return { prevData };
+        const updatedPages = data.pages.map((page) => ({
+          ...page,
+          companies: page.companies?.filter((company) => company.id !== deletedId),
+        }));
+        console.log("updatedPages > ", updatedPages);
+        queryClient.setQueryData(queryKey, { ...data, pages: updatedPages });
+      }
+
+      return { previousData: previousQueries, queryKey: ["companies-infinite-cursor"] };
     },
 
     onError: (err, deletedId, context) => {
       console.error(`Error deleting company with id ${deletedId}: `, err);
-      queryClient.setQueryData(["companiz"], context?.prevData);
+      // queryClient.setQueryData(["companiz"], context?.prevData);
     },
 
     onSettled: () => {

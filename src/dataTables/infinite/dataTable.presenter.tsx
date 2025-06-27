@@ -6,18 +6,19 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useCompaniesTableDataCursor_infinite } from "../../hooks/company/useCompaniesTableDataCursor_infinite";
 
 type useDataTablePresenterProps = DataTableProps;
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 37;
 
-export function useDataTablePresenter({ onRowSelect }: useDataTablePresenterProps) {
-  const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
+export function useDataTablePresenter({ rowSelection, setRowSelection }: useDataTablePresenterProps) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const scrollingTableContainerRef = useRef<HTMLDivElement>(null);
+  const selectedRowIndexRef = useRef(0);
 
   const { companies, totalDbRowCount, isLoading, isFetching, hasNextPage, fetchNextPage } =
     useCompaniesTableDataCursor_infinite({ pageSize: PAGE_SIZE, columnSort: sorting[0], globalFilter });
 
   const totalFetched = companies.length;
+  const selectedRowId: string | undefined = Object.keys(rowSelection)[0];
 
   const rowChangePreventDeselect = (newSelection: Updater<Record<string, boolean>>) => {
     const updatedSelection = typeof newSelection === "function" ? newSelection({}) : newSelection;
@@ -25,13 +26,20 @@ export function useDataTablePresenter({ onRowSelect }: useDataTablePresenterProp
 
     console.log("CLICK > ", updatedSelection);
     setRowSelection(updatedSelection);
+    // ✅ Update index if a row is selected
+    const selectedId = Object.keys(updatedSelection)[0];
+    if (selectedId) {
+      const row = table.getRow(selectedId);
+      // if (row) setSelectedRowIndex(row.index);
+      if (row) selectedRowIndexRef.current = row.index;
+    }
   };
 
   const table = useReactTable<CompanyDto>({
     data: companies,
     columns,
     getRowId: (row) => {
-      if (!row.id) throw new Error("row.id is undefined/null");
+      if (!row.id) throw new Error("row.id is undefined/null, set up in useReactTable({}) options obj");
       return row.id.toString();
     },
     // state is where you manually control parts of the table's internal state, instead of letting the table manage them
@@ -53,12 +61,30 @@ export function useDataTablePresenter({ onRowSelect }: useDataTablePresenterProp
     debugTable: true,
   });
 
+  useEffect(() => {
+    window.__table = table;
+  }, []);
+
   const { rows } = table.getRowModel();
 
+  // Selects row 0 on first open (first data load). Selects next line on delete.
   useEffect(() => {
-    const selectedId: string | undefined = Object.keys(rowSelection)[0];
-    onRowSelect(selectedId ? Number(selectedId) : undefined);
-  }, [rowSelection, table, onRowSelect]);
+    if (rows.length === 0) {
+      if (selectedRowId) setRowSelection({}); // when deleting the last row
+      return;
+    }
+
+    const currentRowExists = !!selectedRowId && rows.some((row) => row.id === selectedRowId);
+
+    if (!selectedRowId || !currentRowExists) {
+      const newId = rows[selectedRowIndexRef.current]?.id ?? rows[selectedRowIndexRef.current - 1]?.id;
+
+      setRowSelection(() => {
+        if (!newId) return {};
+        return { [newId]: true };
+      });
+    }
+  }, [selectedRowId, rows, setRowSelection]);
 
   // ---------------------
 
@@ -81,6 +107,7 @@ export function useDataTablePresenter({ onRowSelect }: useDataTablePresenterProp
   }, [fetchMoreOnBottomReached, scrollingTableContainerRef]);
 
   console.log("presenter renders");
+
   return {
     totalFetched,
     rows,
@@ -92,5 +119,6 @@ export function useDataTablePresenter({ onRowSelect }: useDataTablePresenterProp
     setGlobalFilter: setGlobalFilter,
     isLoading,
     scrollingTableContainerRef,
+    rowSelection,
   };
 }
