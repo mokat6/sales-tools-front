@@ -1,52 +1,50 @@
-import { flexRender, type RowSelectionState } from "@tanstack/react-table";
-import { useDataTablePresenter } from "./dataTable.presenter";
-import React from "react";
-import { Spinner } from "../../components/Spinner";
+import { flexRender, type Table } from "@tanstack/react-table";
+import { useCallback, useEffect, useRef } from "react";
 import { VirtualizedTableBody } from "./VirtualizedTableBody";
+import type { CompanyDto } from "../../api/SwaggerSdk";
+import type { FetchNextPageFn } from "../../hooks/company/useCompaniesTableDataCursor_infinite";
 
 export type DataTableProps = {
-  rowSelection: RowSelectionState;
-  setRowSelection: React.Dispatch<React.SetStateAction<RowSelectionState>>;
+  // rowSelection: RowSelectionState;
+  // setRowSelection: React.Dispatch<React.SetStateAction<RowSelectionState>>;
+  table: Table<CompanyDto>;
+  totalDbRowCount: number;
+  isFetching: boolean;
+  fetchNextPage: FetchNextPageFn;
+  hasNextPage: boolean;
 };
 
-export const DataTable = (props: DataTableProps) => {
-  const {
-    totalFetched,
-    rows,
-    table,
-    // rowVirtualizer,
-    totalDbRowCount,
-    fetchMoreOnBottomReached,
-    globalFilter,
-    setGlobalFilter,
-    isLoading,
-    scrollingTableContainerRef,
-  } = useDataTablePresenter({ ...props });
+export const DataTable = ({ table, totalDbRowCount, isFetching, fetchNextPage, hasNextPage }: DataTableProps) => {
+  const scrollingTableContainerRef = useRef<HTMLDivElement>(null);
+  const { rows } = table.getRowModel();
 
-  const renderTableBody = () => {
-    if (isLoading)
-      return (
-        <div className="flex justify-center items-center h-full">
-          <Spinner size="lg" />
-        </div>
-      );
+  const totalFetched = rows.length;
+  // const selectedRowId: string | undefined = Object.keys(table.getState().rowSelection)[0];
 
-    return (
-      <VirtualizedTableBody
-        rows={rows}
-        scrollingTableContainerRef={scrollingTableContainerRef}
-        fetchMoreOnBottomReached={fetchMoreOnBottomReached}
-      />
-    );
-  };
+  const fetchMoreOnBottomReached = useCallback(
+    (containerRefElement?: HTMLDivElement | null) => {
+      if (containerRefElement) {
+        const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
+        if (scrollHeight - scrollTop - clientHeight < 300 && !isFetching && hasNextPage) {
+          fetchNextPage();
+        }
+      }
+    },
+    [fetchNextPage, isFetching, hasNextPage]
+  );
+
+  //a check on mount and after a fetch to see if the table is already scrolled to the bottom and immediately needs to fetch more data
+  useEffect(() => {
+    fetchMoreOnBottomReached(scrollingTableContainerRef.current);
+  }, [fetchMoreOnBottomReached, scrollingTableContainerRef]);
 
   return (
     <div className="bg-bg-table text-text-body">
       <input
         type="text"
         placeholder="Search companies..."
-        value={globalFilter}
-        onChange={(e) => setGlobalFilter(e.target.value)}
+        value={table.getState().globalFilter}
+        onChange={(e) => table.setGlobalFilter(e.target.value)}
       />
       {/* Header */}
       <div className="font-bold grid grid-cols-[70px_1fr]">
@@ -69,7 +67,13 @@ export const DataTable = (props: DataTableProps) => {
         )}
       </div>
       {/* Table Body */}
-      <div className=" w-80 h-150">{renderTableBody()}</div>
+      <div className=" w-80 h-150">
+        <VirtualizedTableBody
+          rows={rows}
+          scrollingTableContainerRef={scrollingTableContainerRef}
+          fetchMoreOnBottomReached={fetchMoreOnBottomReached}
+        />
+      </div>
       {/* Footer */}
       <div className="bg-bg-header-row text-text-header-row p-1 ">
         Loaded {totalFetched} of {totalDbRowCount} results

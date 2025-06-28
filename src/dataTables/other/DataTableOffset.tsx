@@ -2,7 +2,7 @@ import { type ColumnDef, flexRender, getCoreRowModel, type Updater, useReactTabl
 import React, { useEffect } from "react";
 import { useState } from "react";
 import type { CompanyDto } from "../../api/SwaggerSdk";
-import type { Pagination } from "../../hooks/company/useCompaniesTableData";
+import type { Pagination } from "../../hooks/company/WiP/useCompaniesTableData";
 
 type DataTableOffsetProps = {
   data: CompanyDto[];

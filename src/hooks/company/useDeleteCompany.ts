@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { apiClient } from "../../api/ApiClient";
-import type { CompaniesResponseOffset, CompanyDto, ICompaniesResponseCursor } from "../../api/SwaggerSdk";
+import type { ICompaniesResponseCursor } from "../../api/SwaggerSdk";
 
 export default function useDeleteCompany() {
   const queryClient = useQueryClient();
@@ -27,8 +27,9 @@ export default function useDeleteCompany() {
 
       return { previousData: previousQueries, queryKey: ["companies-infinite-cursor"] };
     },
-
-    onError: (err, deletedId, context) => {
+    onSuccess: () => {},
+    // (context), third arg.
+    onError: (err, deletedId) => {
       console.error(`Error deleting company with id ${deletedId}: `, err);
       // queryClient.setQueryData(["companiz"], context?.prevData);
     },
