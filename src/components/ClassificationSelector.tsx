@@ -18,7 +18,6 @@ export default function ClassificationSelector({ id, value }: ClassificationSele
   const mutation = useUpdateClassification_infinityCursor();
 
   const onValueChange = (newClassification: CompClassificationDto) => {
-    console.log("new option valye", newClassification);
     if (!id) return;
 
     mutation.mutate({

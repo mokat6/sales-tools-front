@@ -5,8 +5,6 @@ import type { CompanyDto } from "../../api/SwaggerSdk";
 import type { FetchNextPageFn } from "../../hooks/company/useCompaniesTableDataCursor_infinite";
 
 export type DataTableProps = {
-  // rowSelection: RowSelectionState;
-  // setRowSelection: React.Dispatch<React.SetStateAction<RowSelectionState>>;
   table: Table<CompanyDto>;
   totalDbRowCount: number;
   isFetching: boolean;
@@ -19,7 +17,6 @@ export const DataTable = ({ table, totalDbRowCount, isFetching, fetchNextPage, h
   const { rows } = table.getRowModel();
 
   const totalFetched = rows.length;
-  // const selectedRowId: string | undefined = Object.keys(table.getState().rowSelection)[0];
 
   const fetchMoreOnBottomReached = useCallback(
     (containerRefElement?: HTMLDivElement | null) => {
