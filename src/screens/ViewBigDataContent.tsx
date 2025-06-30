@@ -15,6 +15,7 @@ import type { CompanyDto } from "../api/SwaggerSdk";
 import { columns } from "../dataTables/infinite/columns";
 
 import type { CompaniesInfiniteQueryResult } from "../hooks/company/useCompaniesTableDataCursor_infinite";
+import { useCompany_InfinityCursor } from "../hooks/company/useCompany";
 
 type ViewBigDataContentProps = Omit<CompaniesInfiniteQueryResult, "isLoading"> & {
   globalFilter: string;
@@ -24,7 +25,7 @@ type ViewBigDataContentProps = Omit<CompaniesInfiniteQueryResult, "isLoading"> &
 };
 
 function ViewBigDataContent({
-  companies,
+  tableData,
   totalDbRowCount,
   isFetching,
   fetchNextPage,
@@ -35,21 +36,28 @@ function ViewBigDataContent({
   hasNextPage,
 }: ViewBigDataContentProps) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>(() => {
-    const firstRowId = companies[0]?.id;
+    const firstRowId = tableData[0]?.id;
     return firstRowId ? { [firstRowId]: true } : {};
   });
+
   const selectedCompanyIdString: string | undefined = Object.keys(rowSelection)[0];
   const selectedCompanyId = selectedCompanyIdString ? Number(selectedCompanyIdString) : undefined;
-  const selectedCompany = companies.find((company) => company.id === selectedCompanyId);
+  const { data: selectedCompany } = useCompany_InfinityCursor(selectedCompanyId);
 
   const rowChangePreventDeselect = (newSelection: Updater<Record<string, boolean>>) => {
-    const updatedSelection = typeof newSelection === "function" ? newSelection({}) : newSelection;
-    if (Object.keys(updatedSelection).length === 0) return;
-    setRowSelection(updatedSelection);
+    // because when you mouse click, it is always a function
+    // when you __table.setRowSelection({2:true})  or ({}) or __table.resetRowSelection()  it is always an object.
+    if (typeof newSelection === "function") {
+      const updatedSelection = newSelection({});
+      if (Object.keys(updatedSelection).length === 0) return;
+      setRowSelection(updatedSelection);
+    } else {
+      setRowSelection(newSelection);
+    }
   };
 
   const table = useReactTable<CompanyDto>({
-    data: companies,
+    data: tableData,
     columns,
     getRowId: (row) => {
       if (!row.id) throw new Error("row.id is undefined/null, set up in useReactTable({}) options obj");
@@ -80,17 +88,16 @@ function ViewBigDataContent({
 
   const reselectAfterCompanyDelete = useCallback(
     (deletedRowIndex: number | undefined) => {
-      if (!deletedRowIndex) return;
+      if (deletedRowIndex === undefined) return;
 
       const allRows = table.getRowModel().rows;
       const nextId = allRows[deletedRowIndex]?.id ?? allRows[deletedRowIndex - 1]?.id;
-
       table.setRowSelection(nextId ? { [nextId]: true } : {});
     },
     [table]
   );
 
-  console.log("Rendering +++++++ .... ViewBigDataContent");
+  console.log("Rendering +++++++ .... ViewBigDataContent, selectedCompanyId> ", selectedCompanyId);
   return (
     <>
       <div className="flex gap-20  items-start pt-6 bg-bg-background">
@@ -110,7 +117,6 @@ function ViewBigDataContent({
             companyId={selectedCompanyId}
             tableRowReselectFn={reselectAfterCompanyDelete}
           />
-          {/* <h1 onClick={() => console.log(companies)}>Popover soon</h1> */}
         </section>
         <section className="">
           <KeyValue keyTitle="Key" valueTitle="Value" data={formatCompany(selectedCompany)} />

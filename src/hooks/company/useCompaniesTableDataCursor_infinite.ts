@@ -40,11 +40,11 @@ export const useCompaniesTableDataCursor_infinite = ({
     placeholderData: keepPreviousData, // probably needed when changing sorting. and sorting would go into [queryKey]
   });
 
-  const flatData = React.useMemo(() => data?.pages.flatMap((page) => page.companies ?? []) ?? [], [data]);
+  const tableData = React.useMemo(() => data?.pages.flatMap((page) => page.companies ?? []) ?? [], [data]);
   const totalDbRowCount = React.useMemo(() => data?.pages?.[0].pagination?.totalCount ?? 0, [data]);
 
   return {
-    companies: flatData,
+    tableData,
     totalDbRowCount,
     isLoading,
     isFetching,
