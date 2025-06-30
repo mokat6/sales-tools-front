@@ -1,13 +1,23 @@
-import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  type InfiniteData,
+  type UseInfiniteQueryResult,
+} from "@tanstack/react-query";
 import { apiClient } from "../../api/ApiClient";
 import React from "react";
 import type { ColumnSort } from "@tanstack/react-table";
+import type { CompaniesResponseCursor } from "../../api/SwaggerSdk";
 
 type useCompaniesTableDataCursor_infiniteProps = {
   pageSize?: number;
   globalFilter?: string;
   columnSort?: ColumnSort;
 };
+
+export type FetchNextPageFn = UseInfiniteQueryResult<InfiniteData<CompaniesResponseCursor>, Error>["fetchNextPage"];
+
+export type CompaniesInfiniteQueryResult = ReturnType<typeof useCompaniesTableDataCursor_infinite>;
 
 export const useCompaniesTableDataCursor_infinite = ({
   pageSize,
@@ -30,11 +40,11 @@ export const useCompaniesTableDataCursor_infinite = ({
     placeholderData: keepPreviousData, // probably needed when changing sorting. and sorting would go into [queryKey]
   });
 
-  const flatData = React.useMemo(() => data?.pages.flatMap((page) => page.companies ?? []) ?? [], [data]);
+  const tableData = React.useMemo(() => data?.pages.flatMap((page) => page.companies ?? []) ?? [], [data]);
   const totalDbRowCount = React.useMemo(() => data?.pages?.[0].pagination?.totalCount ?? 0, [data]);
 
   return {
-    companies: flatData,
+    tableData,
     totalDbRowCount,
     isLoading,
     isFetching,

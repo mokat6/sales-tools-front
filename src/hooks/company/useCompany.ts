@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CompaniesResponseCursor, CompaniesResponseOffset } from "../../api/SwaggerSdk";
 
 export default function useCompany(id: number | undefined) {
@@ -40,6 +40,7 @@ export function useCompany_InfinityCursor(id: number | undefined) {
     },
     enabled: !!id,
     staleTime: Infinity, // we want to keep it forever unless cache is updated
+    placeholderData: id ? keepPreviousData : undefined, // need to be defined for smooth row selection, no flash. But needs to be undefined when clearing companyId.
   });
 }
 

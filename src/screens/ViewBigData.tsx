@@ -1,42 +1,34 @@
-import { KeyValue } from "../components/KeyValue";
-import ClassificationSelector from "../components/ClassificationSelector";
-import DeleteCompButton from "../components/DeleteCompButton";
 import { useState } from "react";
-import { useCompany_InfinityCursor } from "../hooks/company/useCompany";
-import formatCompany from "../format/formatCompany";
-import { DataTable } from "../dataTables/infinite/DataTable";
-import type { RowSelectionState } from "@tanstack/react-table";
+import { Spinner } from "../components/Spinner";
+import ViewBigDataContent from "./ViewBigDataContent";
+import { useCompaniesTableDataCursor_infinite } from "../hooks/company/useCompaniesTableDataCursor_infinite";
+import type { SortingState } from "@tanstack/react-table";
+
+const PAGE_SIZE = 37;
 
 function ViewBigData() {
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [sorting, setSorting] = useState<SortingState>([]);
 
-  const selectedCompanyIdString: string | undefined = Object.keys(rowSelection)[0];
-  const selectedCompanyId = selectedCompanyIdString ? Number(selectedCompanyIdString) : undefined;
+  const { isLoading, ...fetchRest } = useCompaniesTableDataCursor_infinite({
+    pageSize: PAGE_SIZE,
+    columnSort: sorting[0],
+    globalFilter,
+  });
 
-  const { data: selectedCompany } = useCompany_InfinityCursor(selectedCompanyId);
+  //
 
-  console.log("Rendering +++++++ .... ViewBigData");
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Spinner size="lg" />
+      </div>
+    );
+
+  console.log("Rendering +++++++ .... Loader Screen");
   return (
     <>
-      <div className="flex gap-20  items-start pt-6 bg-bg-background">
-        <section className="">
-          <DataTable rowSelection={rowSelection} setRowSelection={setRowSelection} />
-        </section>
-        <section className="flex flex-col gap-5">
-          <div className="flex flex-col text-text-body">
-            <span>Company ID:</span>
-            <span className="text-3xl self-center min-h-12">{selectedCompanyId}</span>
-          </div>
-
-          <ClassificationSelector id={selectedCompanyId} value={selectedCompany?.classification} />
-
-          <DeleteCompButton companyId={selectedCompanyId} />
-          {/* <h1 onClick={() => console.log(companies)}>Popover soon</h1> */}
-        </section>
-        <section className="">
-          <KeyValue keyTitle="Key" valueTitle="Value" data={formatCompany(selectedCompany)} />
-        </section>
-      </div>
+      <ViewBigDataContent {...{ ...fetchRest, globalFilter, setGlobalFilter, sorting, setSorting }} />
     </>
   );
 }
