@@ -351,7 +351,7 @@ export class SwaggerSdk implements ISwaggerSdk {
 export enum CompClassificationDto {
     Unspecified = "Unspecified",
     GoodMatch = "GoodMatch",
-    FuckYou = "FuckYou",
+    Maybe = "Maybe",
     Ecommerce = "Ecommerce",
     GimmeSomeLove = "GimmeSomeLove",
 }
@@ -478,7 +478,7 @@ export class CompanyDto implements ICompanyDto {
     ratedCount?: string | undefined;
     googleMapsUrl?: string | undefined;
     bigFishScore?: number | undefined;
-    classification?: CompClassificationDto;
+    classification?: CompClassificationDto[] | undefined;
 
     constructor(data?: ICompanyDto) {
         if (data) {
@@ -502,7 +502,11 @@ export class CompanyDto implements ICompanyDto {
             this.ratedCount = _data["ratedCount"];
             this.googleMapsUrl = _data["googleMapsUrl"];
             this.bigFishScore = _data["bigFishScore"];
-            this.classification = _data["classification"];
+            if (Array.isArray(_data["classification"])) {
+                this.classification = [] as any;
+                for (let item of _data["classification"])
+                    this.classification!.push(item);
+            }
         }
     }
 
@@ -526,7 +530,11 @@ export class CompanyDto implements ICompanyDto {
         data["ratedCount"] = this.ratedCount;
         data["googleMapsUrl"] = this.googleMapsUrl;
         data["bigFishScore"] = this.bigFishScore;
-        data["classification"] = this.classification;
+        if (Array.isArray(this.classification)) {
+            data["classification"] = [];
+            for (let item of this.classification)
+                data["classification"].push(item);
+        }
         return data;
     }
 
@@ -550,7 +558,7 @@ export interface ICompanyDto {
     ratedCount?: string | undefined;
     googleMapsUrl?: string | undefined;
     bigFishScore?: number | undefined;
-    classification?: CompClassificationDto;
+    classification?: CompClassificationDto[] | undefined;
 }
 
 export class ContactDto implements IContactDto {

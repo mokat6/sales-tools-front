@@ -16,6 +16,7 @@ import { columns } from "../dataTables/infinite/columns";
 
 import type { CompaniesInfiniteQueryResult } from "../hooks/company/useCompaniesTableDataCursor_infinite";
 import { useCompany_InfinityCursor } from "../hooks/company/useCompany";
+import { ContactsContainer } from "../contacts/ContactsContainer";
 
 type ViewBigDataContentProps = Omit<CompaniesInfiniteQueryResult, "isLoading"> & {
   globalFilter: string;
@@ -60,7 +61,7 @@ function ViewBigDataContent({
     data: tableData,
     columns,
     getRowId: (row) => {
-      if (!row.id) throw new Error("row.id is undefined/null, set up in useReactTable({}) options obj");
+      if (row.id === undefined) throw new Error("row.id is undefined/null, set up in useReactTable({}) options obj");
       return row.id.toString();
     },
     state: {
@@ -118,8 +119,9 @@ function ViewBigDataContent({
             tableRowReselectFn={reselectAfterCompanyDelete}
           />
         </section>
-        <section className="">
+        <section className="flex flex-col gap-15">
           <KeyValue keyTitle="Key" valueTitle="Value" data={formatCompany(selectedCompany)} />
+          <ContactsContainer />
         </section>
       </div>
     </>

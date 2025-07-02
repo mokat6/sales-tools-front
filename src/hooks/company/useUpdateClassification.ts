@@ -60,8 +60,17 @@ export function useUpdateClassification_infinityCursor() {
         queryKey: ["companies-infinite-cursor"],
       });
 
+      const touchedQueries: {
+        queryKey: readonly unknown[];
+        previousData: InfiniteData<ICompaniesResponseCursor>;
+      }[] = [];
+
       for (const [queryKey, data] of previousQueries) {
         if (!data) continue;
+
+        const companyFound = data.pages.some((page) => page.companies?.some((c) => c.id === compId));
+        if (!companyFound) continue;
+        touchedQueries.push({ queryKey, previousData: data });
 
         const updatedPages = data.pages.map((page) => {
           const hasCompany = page.companies?.some((c) => c.id === compId);
@@ -77,19 +86,17 @@ export function useUpdateClassification_infinityCursor() {
           ...data,
           pages: updatedPages,
         });
-
-        return { previousData: data, queryKey };
       }
+      return { touchedQueries };
     },
 
     onError: (_err, variables, context) => {
       console.error(`Failed updating classification on comp id ${variables.compId} : `, _err);
-      if (!context?.previousData || !context.queryKey) return;
+      if (!context?.touchedQueries) return;
 
-      queryClient.setQueryData<{
-        pages: ICompaniesResponseCursor[];
-        pageParams: unknown[];
-      }>(context.queryKey, context.previousData);
+      for (const { queryKey, previousData } of context.touchedQueries) {
+        queryClient.setQueryData(queryKey, previousData);
+      }
     },
     onSuccess: (returnedCompany, variables) => {
       console.log("classification update success: ", returnedCompany);

@@ -38,6 +38,9 @@ export const useCompaniesTableDataCursor_infinite = ({
     getNextPageParam: (last) => last.pagination?.nextCursor,
     // refetchOnWindowFocus: false,
     placeholderData: keepPreviousData, // probably needed when changing sorting. and sorting would go into [queryKey]
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60,
   });
 
   const tableData = React.useMemo(() => data?.pages.flatMap((page) => page.companies ?? []) ?? [], [data]);

@@ -7,12 +7,12 @@ const EMPTY_LABEL = "-";
 const compClassificationOptions = {
   Unspecified: EMPTY_LABEL,
   GoodMatch: "Good match",
-  FuckYou: "Fuck you",
+  Maybe: "Maybe",
   Ecommerce: "E-commerce",
   GimmeSomeLove: "Gimme Some Love",
 } as const;
 
-const formatClassification: Formatter = (value) => {
+const formatClassification = (value: string) => {
   return compClassificationOptions[value as keyof typeof compClassificationOptions] ?? String(value);
 };
 

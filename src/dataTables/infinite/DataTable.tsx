@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { VirtualizedTableBody } from "./VirtualizedTableBody";
 import type { CompanyDto } from "../../api/SwaggerSdk";
 import type { FetchNextPageFn } from "../../hooks/company/useCompaniesTableDataCursor_infinite";
+import { TextInput } from "../../components/TextInput";
 
 export type DataTableProps = {
   table: Table<CompanyDto>;
@@ -37,11 +38,10 @@ export const DataTable = ({ table, totalDbRowCount, isFetching, fetchNextPage, h
 
   return (
     <div className="bg-bg-table text-text-body">
-      <input
-        type="text"
+      <TextInput
         placeholder="Search companies..."
         value={table.getState().globalFilter}
-        onChange={(e) => table.setGlobalFilter(e.target.value)}
+        onChange={table.setGlobalFilter}
       />
       {/* Header */}
       <div className="font-bold grid grid-cols-[70px_1fr]">
