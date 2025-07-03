@@ -119,8 +119,10 @@ function ViewBigDataContent({
             tableRowReselectFn={reselectAfterCompanyDelete}
           />
         </section>
-        <section className="flex flex-col gap-15">
-          <KeyValue keyTitle="Key" valueTitle="Value" data={formatCompany(selectedCompany)} />
+        <section className="flex flex-col gap-10">
+          <div className="min-h-135">
+            <KeyValue keyTitle="Key" valueTitle="Value" data={formatCompany(selectedCompany)} />
+          </div>
           <ContactsContainer />
         </section>
       </div>

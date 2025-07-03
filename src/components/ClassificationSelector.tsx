@@ -1,6 +1,4 @@
-import { Select } from "./Select";
 import { CompClassificationDto } from "../api/SwaggerSdk";
-import { compClassificationOptions } from "../api/ApiTypes";
 import { useUpdateClassification_infinityCursor } from "../hooks/company/useUpdateClassification";
 import { MultiSelect } from "./MultiSelect";
 import { formatters } from "../format/formatters";
@@ -34,16 +32,8 @@ export default function ClassificationSelector({ id, value }: ClassificationSele
   };
 
   return (
-    <div>
-      <MultiSelect options={options} onChange={onValueChange} placeholder="-" values={value ?? []} />
-      {/* 
-      <Select
-        className="min-w-50"
-        disabled={!value || !id}
-        onValueChange={onValueChange}
-        value={value ?? CompClassificationDto.Unspecified}
-        options={options}
-      /> */}
+    <div className="w-50 h-30">
+      <MultiSelect options={options} onChange={onValueChange} placeholder="Select..." values={value ?? []} />
     </div>
   );
 }

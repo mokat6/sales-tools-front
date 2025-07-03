@@ -16,6 +16,12 @@ export default function formatCompany(company?: CompanyDto): Record<string, Reac
     "Rated Count": formatters.plainText(company.ratedCount),
     "Google maps url": formatters.url(company.googleMapsUrl),
     "BigFish score": formatters.plainText(company.bigFishScore),
-    Classification: formatters.companyClassification(company.classification),
+    Classification: formatters.plainText(
+      company.classification?.map((c) => formatters.companyClassification(c)).join(", ")
+    ),
+    // reduce(
+    //   (acc, next) => acc + formatters.companyClassification(next) + ", ",
+    //   ""
+    // ),
   };
 }
