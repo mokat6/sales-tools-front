@@ -19,9 +19,5 @@ export default function formatCompany(company?: CompanyDto): Record<string, Reac
     Classification: formatters.plainText(
       company.classification?.map((c) => formatters.companyClassification(c)).join(", ")
     ),
-    // reduce(
-    //   (acc, next) => acc + formatters.companyClassification(next) + ", ",
-    //   ""
-    // ),
   };
 }
