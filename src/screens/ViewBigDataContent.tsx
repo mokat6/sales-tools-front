@@ -123,7 +123,7 @@ function ViewBigDataContent({
           <div className="min-h-135">
             <KeyValue keyTitle="Key" valueTitle="Value" data={formatCompany(selectedCompany)} />
           </div>
-          <ContactsContainer />
+          <ContactsContainer compId={selectedCompanyId} />
         </section>
       </div>
     </>

@@ -36,8 +36,61 @@ const plainText: Formatter = (value) => {
   return String(value || "-");
 };
 
+const contactTypeFormat: Record<string, string> = {
+  PhoneNumber: "Phone",
+  Email: "Email",
+  Facebook: "FB",
+  Instagram: "In",
+  LinkedIn: "Lin",
+  Twitter: "Tw",
+  Other: "Other",
+};
+
+const contactType = (key: unknown) => {
+  if (typeof key !== "string") return "Other";
+  return contactTypeFormat[key] ?? key;
+};
+
+function urlMinusHttp(url: unknown): string {
+  if (typeof url !== "string") return "";
+  return url.replace(/^https?:\/\/(www\.)?/, "");
+}
+
+const simplifyUrl: Formatter = (value) => {
+  if (typeof value === "string") {
+    // Skip emails or phone numbers
+    if (value.includes("@") || /^\+?\d+$/.test(value.replace(/\s+/g, ""))) {
+      return value;
+    }
+
+    let url: URL;
+    try {
+      // Try with original
+      url = new URL(value);
+    } catch {
+      try {
+        // If it fails, try prepending https://
+        url = new URL("https://" + value);
+      } catch {
+        return value; // Not a valid URL
+      }
+    }
+
+    const simplified = urlMinusHttp(value);
+    return (
+      <a href={url.href} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+        {simplified}
+      </a>
+    );
+  }
+
+  return String(value || "-");
+};
+
 export const formatters = {
   url: formatIfUrl,
   companyClassification: formatClassification,
   plainText,
+  contactType,
+  simplifyUrl,
 };
