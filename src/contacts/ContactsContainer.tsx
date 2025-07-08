@@ -1,49 +1,51 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Select } from "../components/Select";
 import { TextInput } from "../components/TextInput";
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { MultiSelect } from "../components/MultiSelect";
 import { useContacts } from "../hooks/contact/useContacts";
 import { columns } from "./columns.tsx";
-import type { ContactDto } from "../api/SwaggerSdk.ts";
+import { ContactTypeDto } from "../api/SwaggerSdk.ts";
 import { ContactTable } from "./ContactTable.tsx";
+import { Button } from "../components/Button.tsx";
+import useCreateContact from "../hooks/contact/useCreateContact.ts";
 
 const options = [
-  { label: "Linkedin", value: "1" },
-  { label: "Facebook", value: "2" },
-  { label: "Twitter", value: "3" },
-  { label: "Email", value: "4" },
-  { label: "Phone", value: "5" },
+  { label: "Email", value: ContactTypeDto.Email },
+  { label: "Phone", value: ContactTypeDto.PhoneNumber },
+  { label: "Facebook", value: ContactTypeDto.Facebook },
+  { label: "Instagram", value: ContactTypeDto.Instagram },
+  { label: "LinkedIn", value: ContactTypeDto.LinkedIn },
+  { label: "Other", value: ContactTypeDto.Other },
 ];
 
 type ContactsContainerProps = {
   compId: number;
 };
 
+// const options2 = Object.keys(ContactTypeDto);
+
 export const ContactsContainer = ({ compId }: ContactsContainerProps) => {
-  const [contactType, setContactType] = useState<string>();
+  const [contactType, setContactType] = useState<ContactTypeDto>();
   const [contactValue, setContactValue] = useState<string>("");
 
-  //   const table = useReactTable({});
   const { data, isLoading } = useContacts(compId);
-
-  // Data has to be memoized or else - infinite loop
-  // if ((isLoading, !data)) return <div>Loading...</div>;
 
   // const rows = table.getRowModel().rows;
   console.log("rerender XXXXX" + Math.random() * 1000);
+  const mutation = useCreateContact();
 
-  // console.log("contacts DATA >> ", data);
+  const handleCreateNewContact = () => {
+    if (!contactType) return;
+    mutation.mutate({ value: contactValue, companyId: compId, type: contactType });
+  };
 
   return (
     <div className=" w-200 flex flex-col gap-6">
       <div className="flex gap-10">
-        <Select onValueChange={setContactType} options={options} className="min-w-30" />
+        <Select onValueChange={setContactType} value={contactType} options={options} className="min-w-30" />
         <TextInput placeholder="Enter value" onChange={setContactValue} value={contactValue} />
+        <Button onClick={handleCreateNewContact}>Create</Button>
       </div>
       <ContactTable {...{ data, columns }} />
-      <div onClick={() => console.log()}>div 1</div>
-      <div>div 2</div>
     </div>
   );
 };

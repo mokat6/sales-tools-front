@@ -1,6 +1,5 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../api/ApiClient";
-import { useMemo } from "react";
 
 export function useContacts(compId: number) {
   const { data, isLoading } = useQuery({

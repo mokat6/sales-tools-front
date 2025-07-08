@@ -49,6 +49,12 @@ export interface ISwaggerSdk {
      * @return OK
      */
     getCompanyContacts(compId?: number | undefined): Promise<ContactDto[]>;
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    createCompanyContact(body?: CreateContactDto | undefined): Promise<ContactDto>;
 }
 
 export class SwaggerSdk implements ISwaggerSdk {
@@ -346,6 +352,49 @@ export class SwaggerSdk implements ISwaggerSdk {
         }
         return Promise.resolve<ContactDto[]>(null as any);
     }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    createCompanyContact(body?: CreateContactDto | undefined, signal?: AbortSignal): Promise<ContactDto> {
+        let url_ = this.baseUrl + "/api/Contact";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateCompanyContact(_response);
+        });
+    }
+
+    protected processCreateCompanyContact(response: Response): Promise<ContactDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ContactDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ContactDto>(null as any);
+    }
 }
 
 export enum CompClassificationDto {
@@ -565,7 +614,7 @@ export class ContactDto implements IContactDto {
     id?: number;
     companyId?: number;
     value!: string | undefined;
-    type?: ContactType;
+    type?: ContactTypeDto;
     isOnWhatsapp?: boolean | undefined;
     contactedFromEmail?: string | undefined;
     checked?: boolean | undefined;
@@ -625,21 +674,72 @@ export interface IContactDto {
     id?: number;
     companyId?: number;
     value: string | undefined;
-    type?: ContactType;
+    type?: ContactTypeDto;
     isOnWhatsapp?: boolean | undefined;
     contactedFromEmail?: string | undefined;
     checked?: boolean | undefined;
     date?: Date | undefined;
 }
 
-export enum ContactType {
+export enum ContactTypeDto {
     Unspecified = "Unspecified",
-    Phone = "Phone",
     Email = "Email",
+    PhoneNumber = "PhoneNumber",
     Facebook = "Facebook",
-    Linkedin = "Linkedin",
     Instagram = "Instagram",
+    LinkedIn = "LinkedIn",
     Other = "Other",
+}
+
+export class CreateContactDto implements ICreateContactDto {
+    companyId?: number;
+    value!: string | undefined;
+    type?: ContactTypeDto;
+
+    constructor(data?: ICreateContactDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.companyId = _data["companyId"];
+            this.value = _data["value"];
+            this.type = _data["type"];
+        }
+    }
+
+    static fromJS(data: any): CreateContactDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateContactDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["companyId"] = this.companyId;
+        data["value"] = this.value;
+        data["type"] = this.type;
+        return data;
+    }
+
+    clone(): CreateContactDto {
+        const json = this.toJSON();
+        let result = new CreateContactDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateContactDto {
+    companyId?: number;
+    value: string | undefined;
+    type?: ContactTypeDto;
 }
 
 export class Operation implements IOperation {
