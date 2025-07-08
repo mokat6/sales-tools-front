@@ -27,7 +27,7 @@ export const ContactsContainer = ({ compId }: ContactsContainerProps) => {
   const [contactType, setContactType] = useState<ContactTypeDto>();
   const [contactValue, setContactValue] = useState<string>("");
 
-  const { data, isLoading } = useContacts(compId);
+  const { data } = useContacts(compId);
 
   // const rows = table.getRowModel().rows;
   console.log("rerender XXXXX" + Math.random() * 1000);
