@@ -28,7 +28,7 @@ export function ContactTable({ columns, data }: ContactTableProps) {
             {headerGroup.headers.map((header) => (
               <th
                 key={header.id}
-                className=" px-2 py-1 text-left cursor-pointer hover:bg-gray-100 relative group"
+                className=" px-2 py-1 text-left cursor-pointer hover:bg-bg-header-hover relative group"
                 style={{ width: header.getSize() }}
                 aria-sort={
                   header.column.getIsSorted()

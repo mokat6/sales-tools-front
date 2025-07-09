@@ -35,7 +35,7 @@ export const VirtualizedTableBody = ({
     >
       <div style={{ height: `${rowVirtualizer.getTotalSize()}px` }} className="relative">
         <div
-          className="absolute"
+          className="absolute w-full"
           style={{ transform: `translateY(${rowVirtualizer.getVirtualItems()[0]?.start ?? 0}px)` }}
         >
           {/* The virtual rows */}

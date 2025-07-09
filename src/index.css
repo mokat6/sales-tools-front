@@ -58,6 +58,7 @@
   --color-border: #e0e0e0; /*grey*/
   --color-bg-background: #f6f6f6; /*aka surface? very light grey*/
   --color-bg-header-row: #ebebeb; /* grey*/
+  --color-bg-header-hover: #f5f5f5; /* grey*/
   --color-bg-row-selected: #eaf0fe; /* blueish*/
   --color-bg-row-hover: #eeeeee; /* blueish*/
   --color-bg-table: #fff;
@@ -88,6 +89,7 @@
 
   --color-text-body: #ffffff; /* body text: white */
   --color-text-header-row: #cfcfcf; /* light grey */
+
   --color-bg-row-selected: #5c6372; /* blueish*/
   --color-bg-row-hover: #6e6e6e; /* blueish*/
   --color-text-greyed-out: #7d7d7d; /* greyed-out/inactive text */
@@ -96,8 +98,10 @@
   --color-border: #5b5b5b; /* same as component-border */
   --color-bg-background: #121212; /* true dark background */
   --color-bg-header-row: #4f4f4f; /* slightly elevated surface */
+  --color-bg-header-hover: #747474; /* grey*/
+
   --color-bg-table: #373737; /* table/card background */
-  --color-bg-disabled: #5c5c5c;
+  --color-bg-disabled: #575757;
 
   --color-header-row-text: #b3b3b3; /* muted light grey text */
 }
@@ -109,7 +113,7 @@
   --color-component-border: #a5d6a7; /* soft green border */
 
   --color-text-body: #1b5e20; /* dark green text for body */
-  --color-text-header-row: #388e3c; /* medium green for headers */
+  --color-text-header-row: #ffffff; /* medium green for headers */
   --color-bg-row-selected: #eafeeb; /* blueish*/
   --color-bg-row-hover: #eeeeee; /* blueish*/
   --color-text-greyed-out: #81c784; /* light desaturated green */
@@ -117,7 +121,9 @@
 
   --color-border: #c8e6c9; /* light green border */
   --color-bg-background: #f1f8f2; /* pale green background */
-  --color-bg-header-row: #e0f2f1; /* slightly elevated surface (minty) */
+  --color-bg-header-row: #6ba685; /* slightly elevated surface (minty) */
+  --color-bg-header-hover: #aecfbc; /* grey*/
+
   --color-bg-table: #ffffff; /* white cards/tables for contrast */
   --color-bg-disabled: #9cab91;
 

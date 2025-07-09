@@ -4,6 +4,8 @@ import { VirtualizedTableBody } from "./VirtualizedTableBody";
 import type { CompanyDto } from "../../api/SwaggerSdk";
 import type { FetchNextPageFn } from "../../hooks/company/useCompaniesTableDataCursor_infinite";
 import { TextInput } from "../../components/TextInput";
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { TableFooterButton } from "../../components/TableFooterButton";
 
 export type DataTableProps = {
   table: Table<CompanyDto>;
@@ -38,33 +40,32 @@ export const DataTable = ({ table, totalDbRowCount, isFetching, fetchNextPage, h
 
   return (
     <div className="bg-bg-table text-text-body">
-      <TextInput
-        placeholder="Search companies..."
-        value={table.getState().globalFilter}
-        onChange={table.setGlobalFilter}
-      />
+      <TextInput placeholder="Filter..." value={table.getState().globalFilter} onChange={table.setGlobalFilter} />
       {/* Header */}
-      <div className="font-bold grid grid-cols-[70px_1fr]">
+      <div className="font-bold grid grid-cols-[70px_1fr] bg-bg-header-row text-text-header-row border border-border">
         {table.getHeaderGroups().map((headerGroup) =>
           headerGroup.headers.map((header) => {
             return (
               <div
                 key={header.id}
-                className={`px-4 py-1 border cursor-pointer select-none`}
+                className={`px-4 py-1  cursor-pointer select-none flex items-center gap-1 hover:bg-bg-header-hover`}
                 onClick={header.column.getToggleSortingHandler()}
               >
                 {flexRender(header.column.columnDef.header, header.getContext())}
-                {{
-                  asc: " 🔼",
-                  desc: " 🔽",
-                }[header.column.getIsSorted() as string] ?? null}
+                {header.column.getCanSort() &&
+                  ({
+                    asc: <ArrowUp size={14} className="text-action-primary" />,
+                    desc: <ArrowDown size={14} className="text-action-primary" />,
+                  }[header.column.getIsSorted() as string] ?? (
+                    <ArrowUpDown size={14} className="text-text-header-row" />
+                  ))}
               </div>
             );
           })
         )}
       </div>
       {/* Table Body */}
-      <div className=" w-80 h-150">
+      <div className=" w-80 h-150 ">
         <VirtualizedTableBody
           rows={rows}
           scrollingTableContainerRef={scrollingTableContainerRef}
@@ -72,8 +73,11 @@ export const DataTable = ({ table, totalDbRowCount, isFetching, fetchNextPage, h
         />
       </div>
       {/* Footer */}
-      <div className="bg-bg-header-row text-text-header-row p-1 ">
-        Loaded {totalFetched} of {totalDbRowCount} results
+      <div className="bg-bg-header-row text-text-header-row p-1 border-border border flex justify-between px-3 items-center">
+        <div>
+          Loaded {totalFetched} of {totalDbRowCount} results
+        </div>
+        <TableFooterButton />
       </div>
     </div>
   );

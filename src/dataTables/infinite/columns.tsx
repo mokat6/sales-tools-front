@@ -5,7 +5,7 @@ export const columns: ColumnDef<CompanyDto>[] = [
   {
     accessorKey: "id", // column id will default to "id"
     id: "Id",
-    header: "id",
+    header: "ID",
     cell: ({ getValue }) => getValue(), // or row.original.id if needed
     enableSorting: true,
   },
@@ -14,7 +14,7 @@ export const columns: ColumnDef<CompanyDto>[] = [
     accessorKey: "companyName", // makes `cell: (info) => info.getValue()`  work!
 
     id: "CompanyName",
-    header: "name",
+    header: "Company name",
     footer: (props) => props.column.id,
     cell: (info) => info.getValue(),
     enableSorting: true,
