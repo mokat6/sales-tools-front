@@ -11,6 +11,7 @@ export const columns: ColumnDef<ContactDto>[] = [
     // accessorFn: (row) => "roll",
     cell: ({ getValue }) => formatters.contactType(getValue()),
     // enableSorting: true,
+    enableResizing: true,
   },
 
   {
@@ -19,6 +20,8 @@ export const columns: ColumnDef<ContactDto>[] = [
     header: "Identifier",
     cell: (info) => formatters.simplifyUrl(info.getValue()),
     enableSorting: true,
+    enableResizing: true,
+    size: 350,
   },
 
   {
@@ -30,6 +33,8 @@ export const columns: ColumnDef<ContactDto>[] = [
       return <div className="text-center">{value === true ? "✔" : value === false ? "✘" : "-"}</div>;
     },
     enableSorting: true,
+    enableResizing: false,
+    size: 75,
   },
   {
     accessorKey: "isOnWhatsapp", // makes `cell: (info) => info.getValue()`  work!
@@ -37,6 +42,8 @@ export const columns: ColumnDef<ContactDto>[] = [
     header: "W/A",
     cell: (info) => info.getValue() ?? "-",
     enableSorting: true,
+    enableResizing: false,
+    size: 50,
   },
   {
     accessorKey: "contactedFromEmail", // makes `cell: (info) => info.getValue()`  work!
@@ -48,5 +55,7 @@ export const columns: ColumnDef<ContactDto>[] = [
   {
     id: "actions",
     cell: (props) => <RowActions contactId={Number(props.row.id)} companyId={Number(props.row.original.companyId)} />,
+    size: 40,
+    enableResizing: false,
   },
 ];
