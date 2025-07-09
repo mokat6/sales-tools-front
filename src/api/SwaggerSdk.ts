@@ -55,6 +55,12 @@ export interface ISwaggerSdk {
      * @return OK
      */
     createCompanyContact(body?: CreateContactDto | undefined): Promise<ContactDto>;
+
+    /**
+     * @param contactId (optional) 
+     * @return OK
+     */
+    deleteContact(contactId?: number | undefined): Promise<void>;
 }
 
 export class SwaggerSdk implements ISwaggerSdk {
@@ -394,6 +400,45 @@ export class SwaggerSdk implements ISwaggerSdk {
             });
         }
         return Promise.resolve<ContactDto>(null as any);
+    }
+
+    /**
+     * @param contactId (optional) 
+     * @return OK
+     */
+    deleteContact(contactId?: number | undefined, signal?: AbortSignal): Promise<void> {
+        let url_ = this.baseUrl + "/api/Contact?";
+        if (contactId === null)
+            throw new Error("The parameter 'contactId' cannot be null.");
+        else if (contactId !== undefined)
+            url_ += "contactId=" + encodeURIComponent("" + contactId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            signal,
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteContact(_response);
+        });
+    }
+
+    protected processDeleteContact(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
     }
 }
 

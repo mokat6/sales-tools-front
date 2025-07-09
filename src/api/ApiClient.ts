@@ -34,6 +34,7 @@ export const apiClient = {
     const dto = CreateContactDto.fromJS(newContact);
     return await swaggerSdk.createCompanyContact(dto);
   },
+  deleteContact: async (contactId: number) => await swaggerSdk.deleteContact(contactId),
 };
 
 type getCompaniesCursorProps = {

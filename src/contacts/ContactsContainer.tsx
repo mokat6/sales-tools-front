@@ -18,7 +18,7 @@ const options = [
 ];
 
 type ContactsContainerProps = {
-  compId: number;
+  compId: number | undefined;
 };
 
 // const options2 = Object.keys(ContactTypeDto);
@@ -39,9 +39,15 @@ export const ContactsContainer = ({ compId }: ContactsContainerProps) => {
   };
 
   return (
-    <div className=" w-200 flex flex-col gap-6">
+    <div className=" w-200 flex flex-col gap-6 text-text-body">
       <div className="flex gap-10">
-        <Select onValueChange={setContactType} value={contactType} options={options} className="min-w-30" />
+        <Select
+          placeholder="Select..."
+          onValueChange={setContactType}
+          value={contactType}
+          options={options}
+          className="min-w-30"
+        />
         <TextInput placeholder="Enter value" onChange={setContactValue} value={contactValue} />
         <Button onClick={handleCreateNewContact}>Create</Button>
       </div>

@@ -1,5 +1,6 @@
-import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { CompaniesResponseCursor, CompaniesResponseOffset } from "../../api/SwaggerSdk";
+import { keepPreviousData, useQuery, useQueryClient, type InfiniteData } from "@tanstack/react-query";
+import { type CompaniesResponseOffset, type ICompaniesResponseCursor } from "../../api/SwaggerSdk";
+import { isDefined } from "../../helpers/isDefined";
 
 export default function useCompany(id: number | undefined) {
   const queryClient = useQueryClient();
@@ -18,14 +19,16 @@ export default function useCompany(id: number | undefined) {
 }
 
 export function useCompany_InfinityCursor(id: number | undefined) {
+  const enabled = isDefined(id);
+
   const queryClient = useQueryClient();
 
   return useQuery({
     queryKey: ["company-from-cached-list", id],
     queryFn: () => {
-      if (!id) return undefined;
+      if (!enabled) return Promise.resolve(undefined);
 
-      const queries = queryClient.getQueriesData<{ pages: CompaniesResponseCursor[] }>({
+      const queries = queryClient.getQueriesData<InfiniteData<ICompaniesResponseCursor>>({
         queryKey: ["companies-infinite-cursor"],
       });
 
@@ -38,7 +41,7 @@ export function useCompany_InfinityCursor(id: number | undefined) {
 
       return undefined;
     },
-    enabled: !!id,
+    enabled,
     staleTime: Infinity, // we want to keep it forever unless cache is updated
     placeholderData: id ? keepPreviousData : undefined, // need to be defined for smooth row selection, no flash. But needs to be undefined when clearing companyId.
   });

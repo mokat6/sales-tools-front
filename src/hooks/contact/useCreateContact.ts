@@ -16,7 +16,7 @@ export default function useCreateContact() {
       const compId = newContact.companyId;
       if (!isDefined(compId)) return;
 
-      const previousQuery = queryClient.getQueryData<IContactDto[]>(["contacts", newContact.companyId]);
+      const previousQuery = queryClient.getQueryData<IContactDto[]>(queryKey);
       console.log("previousQuery >>>> ", previousQuery);
 
       const tempId = Date.now();

@@ -1,6 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { ContactDto } from "../api/SwaggerSdk";
 import { formatters } from "../format/formatters";
+import { RowActions } from "../components/RowActions";
 
 export const columns: ColumnDef<ContactDto>[] = [
   {
@@ -43,5 +44,9 @@ export const columns: ColumnDef<ContactDto>[] = [
     header: "Sent from",
     cell: (info) => info.getValue() ?? "-",
     enableSorting: false,
+  },
+  {
+    id: "actions",
+    cell: (props) => <RowActions contactId={Number(props.row.id)} companyId={Number(props.row.original.companyId)} />,
   },
 ];

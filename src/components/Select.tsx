@@ -30,7 +30,7 @@ export function Select<T extends string>({
   return (
     <SelectRadix.Root value={value} onValueChange={onValueChange} disabled={disabled}>
       <SelectRadix.Trigger
-        className={`inline-flex items-center justify-between rounded px-4 py-2 bg-white text-black border border-gray-300 shadow-sm ${className}`}
+        className={`inline-flex items-center justify-between rounded px-4 py-2 bg-bg-table text-text-body border border-border shadow-sm ${className}`}
         aria-label="Theme"
       >
         <SelectRadix.Value placeholder={placeholder} />
@@ -40,13 +40,13 @@ export function Select<T extends string>({
       </SelectRadix.Trigger>
 
       <SelectRadix.Portal>
-        <SelectRadix.Content className="bg-white border border-gray-300 rounded shadow-md">
+        <SelectRadix.Content className="bg-bg-table border border-border rounded shadow-md text-text-body">
           <SelectRadix.Viewport className="p-1">
             {options.map((themeOption) => (
               <SelectRadix.Item
                 key={themeOption.value}
                 value={themeOption.value}
-                className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                className="flex items-center px-4 py-2 hover:bg-bg-row-hover cursor-pointer"
               >
                 <SelectRadix.ItemText>{themeOption.label}</SelectRadix.ItemText>
                 <SelectRadix.ItemIndicator className="ml-auto">

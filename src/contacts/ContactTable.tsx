@@ -11,12 +11,16 @@ export function ContactTable({ columns, data }: ContactTableProps) {
   const table = useReactTable<ContactDto>({
     columns,
     data,
+    getRowId: (row) => {
+      if (row.id === undefined) throw new Error("row.id is undefined/null, set up in useReactTable({}) options obj");
+      return row.id.toString();
+    },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
 
   return (
-    <table className="border w-full border-border">
+    <table className="border w-full border-border text-text-body">
       <thead className="bg-bg-header-row">
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>

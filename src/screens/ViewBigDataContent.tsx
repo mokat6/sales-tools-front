@@ -1,7 +1,7 @@
 import { KeyValue } from "../components/KeyValue";
 import ClassificationSelector from "../components/ClassificationSelector";
 import DeleteCompButton from "../components/DeleteCompButton";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import formatCompany from "../format/formatCompany";
 import { DataTable } from "../dataTables/infinite/DataTable";
 import {
@@ -82,10 +82,6 @@ function ViewBigDataContent({
   });
 
   const selectedIndex: number | undefined = table.getSelectedRowModel().rows[0]?.index;
-
-  useEffect(() => {
-    window.__table = table;
-  }, []);
 
   const reselectAfterCompanyDelete = useCallback(
     (deletedRowIndex: number | undefined) => {
