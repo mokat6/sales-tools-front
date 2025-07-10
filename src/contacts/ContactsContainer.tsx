@@ -21,21 +21,30 @@ type ContactsContainerProps = {
   compId: number | undefined;
 };
 
-// const options2 = Object.keys(ContactTypeDto);
-
 export const ContactsContainer = ({ compId }: ContactsContainerProps) => {
-  const [contactType, setContactType] = useState<ContactTypeDto>();
+  const [contactType, setContactType] = useState<ContactTypeDto | "">("");
   const [contactValue, setContactValue] = useState<string>("");
 
   const { data, isLoading } = useContacts(compId);
 
-  // const rows = table.getRowModel().rows;
   console.log("rerender XXXXX" + Math.random() * 1000);
   const mutation = useCreateContact();
 
   const handleCreateNewContact = () => {
     if (!contactType) return;
-    mutation.mutate({ value: contactValue, companyId: compId, type: contactType });
+    if (contactType === ContactTypeDto.Unspecified || contactValue.trim() === "") {
+      // TODO: add toast    "Please fill out both the contact type and value."
+      return;
+    }
+    mutation.mutate(
+      { value: contactValue, companyId: compId, type: contactType },
+      {
+        onSuccess: () => {
+          setContactType("");
+          setContactValue("");
+        },
+      }
+    );
   };
 
   return (

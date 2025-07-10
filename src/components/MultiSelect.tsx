@@ -52,8 +52,8 @@ export function MultiSelect<T extends string>({
                   className="flex items-center gap-1 bg-bg-row-selected text-text-body rounded-full px-2 py-0.5 text-xs"
                 >
                   {option.label}
-                  <button
-                    type="button"
+                  <span
+                    role="button"
                     className="ml-1 text-action-primary hover:text-text-body"
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent popover toggle
@@ -62,7 +62,7 @@ export function MultiSelect<T extends string>({
                     aria-label={`Remove ${option.label}`}
                   >
                     ×
-                  </button>
+                  </span>
                 </span>
               );
             })
