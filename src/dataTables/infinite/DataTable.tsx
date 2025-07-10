@@ -4,7 +4,7 @@ import { VirtualizedTableBody } from "./VirtualizedTableBody";
 import type { CompanyDto } from "../../api/SwaggerSdk";
 import type { FetchNextPageFn } from "../../hooks/company/useCompaniesTableDataCursor_infinite";
 import { TextInput } from "../../components/TextInput";
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, FilterX } from "lucide-react";
 
 export type DataTableProps = {
   table: Table<CompanyDto>;
@@ -14,6 +14,22 @@ export type DataTableProps = {
   hasNextPage: boolean;
   toolbarButtons: React.ReactNode[];
 };
+
+const emptyState = (isFilterApplied: boolean) => (
+  <div className="flex flex-col items-center justify-center text-text-secondary py-12 gap-2 text-center">
+    {isFilterApplied && (
+      <div>
+        <FilterX size={32} className="text-muted-foreground mb-2" />
+      </div>
+    )}
+    <div className="text-lg font-medium">
+      {isFilterApplied ? "No companies match your filter." : "No companies found."}
+    </div>
+    <div className="text-sm">
+      {isFilterApplied ? "Try adjusting the search." : "Start by adding a new company to populate this table."}
+    </div>
+  </div>
+);
 
 export const DataTable = ({
   table,
@@ -73,11 +89,15 @@ export const DataTable = ({
       </div>
       {/* Table Body */}
       <div className=" w-80 h-150 ">
-        <VirtualizedTableBody
-          rows={rows}
-          scrollingTableContainerRef={scrollingTableContainerRef}
-          fetchMoreOnBottomReached={fetchMoreOnBottomReached}
-        />
+        {rows.length === 0 ? (
+          emptyState(!!table.getState().globalFilter)
+        ) : (
+          <VirtualizedTableBody
+            rows={rows}
+            scrollingTableContainerRef={scrollingTableContainerRef}
+            fetchMoreOnBottomReached={fetchMoreOnBottomReached}
+          />
+        )}
       </div>
       {/* Footer */}
       <div className="bg-bg-header-row text-text-header-row p-1 border-border border flex justify-between px-3 items-center">
