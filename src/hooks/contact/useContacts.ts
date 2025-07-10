@@ -11,12 +11,12 @@ export function useContacts(compId: number | undefined) {
       if (!enabled) return Promise.resolve([]);
       return apiClient.getContacts(compId);
     },
-    placeholderData: compId ? keepPreviousData : undefined, // need to be defined for smooth row selection, no flash. But needs to be undefined when clearing companyId.
+    // placeholderData: compId ? keepPreviousData : undefined, // need to be defined for smooth row selection, no flash. But needs to be undefined when clearing companyId.
     enabled,
   });
 
   return {
-    data: data ?? [],
+    data,
     isLoading,
   };
 }

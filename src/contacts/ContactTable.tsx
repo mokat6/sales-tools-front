@@ -4,13 +4,16 @@ import { ArrowUpDown, ArrowDown, ArrowUp } from "lucide-react";
 
 type ContactTableProps = {
   columns: ColumnDef<ContactDto>[];
-  data: ContactDto[];
+  data: ContactDto[] | undefined;
+  isLoading: boolean;
 };
 
-export function ContactTable({ columns, data }: ContactTableProps) {
+const stableEmptyArray: ContactDto[] = [];
+
+export function ContactTable({ columns, data, isLoading }: ContactTableProps) {
   const table = useReactTable<ContactDto>({
     columns,
-    data,
+    data: data ?? stableEmptyArray,
     getRowId: (row) => {
       if (row.id === undefined) throw new Error("row.id is undefined/null, set up in useReactTable({}) options obj");
       return row.id.toString();
@@ -19,6 +22,30 @@ export function ContactTable({ columns, data }: ContactTableProps) {
     getSortedRowModel: getSortedRowModel(),
     columnResizeMode: "onChange",
   });
+
+  const renderLoading = () => (
+    <tbody className=" animate-pulse">
+      {Array.from({ length: 5 }).map((_, rowIdx) => (
+        <tr key={`skeleton-${rowIdx}`} className="">
+          {columns.map((_, colIdx) => (
+            <td key={`skeleton-${rowIdx}-${colIdx}`} className=" px-2 py-1">
+              <div className="h-4 w-full  bg-bg-table dark:bg-bg-header-row rounded" />
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  );
+
+  const renderEmptyState = () => (
+    <tbody className="bg-bg-table">
+      <tr>
+        <td colSpan={99} className="px-6 py-6">
+          No contacts yet — time to add your first one!
+        </td>
+      </tr>
+    </tbody>
+  );
 
   return (
     <table className="border w-full border-border text-text-body" style={{ width: table.getCenterTotalSize() }}>
@@ -72,17 +99,23 @@ export function ContactTable({ columns, data }: ContactTableProps) {
           </tr>
         ))}
       </thead>
-      <tbody className="bg-bg-table">
-        {table.getRowModel().rows.map((row) => (
-          <tr key={row.id} className="hover:bg-bg-row-hover">
-            {row.getVisibleCells().map((cell) => (
-              <td key={cell.id} className="border-t border-border px-2 py-1" style={{ width: cell.column.getSize() }}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
+      {isLoading ? (
+        renderLoading()
+      ) : data?.length === 0 ? (
+        renderEmptyState()
+      ) : (
+        <tbody className="bg-bg-table">
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id} className="hover:bg-bg-row-hover">
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className="border-t border-border px-2 py-1" style={{ width: cell.column.getSize() }}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      )}
     </table>
   );
 }

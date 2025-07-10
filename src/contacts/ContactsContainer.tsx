@@ -27,7 +27,7 @@ export const ContactsContainer = ({ compId }: ContactsContainerProps) => {
   const [contactType, setContactType] = useState<ContactTypeDto>();
   const [contactValue, setContactValue] = useState<string>("");
 
-  const { data } = useContacts(compId);
+  const { data, isLoading } = useContacts(compId);
 
   // const rows = table.getRowModel().rows;
   console.log("rerender XXXXX" + Math.random() * 1000);
@@ -51,7 +51,7 @@ export const ContactsContainer = ({ compId }: ContactsContainerProps) => {
         <TextInput placeholder="Enter value" onChange={setContactValue} value={contactValue} />
         <Button onClick={handleCreateNewContact}>Create</Button>
       </div>
-      <ContactTable {...{ data, columns }} />
+      <ContactTable {...{ data, columns, isLoading }} />
     </div>
   );
 };
