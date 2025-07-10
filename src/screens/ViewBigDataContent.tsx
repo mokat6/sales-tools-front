@@ -17,6 +17,7 @@ import { columns } from "../dataTables/infinite/columns";
 import type { CompaniesInfiniteQueryResult } from "../hooks/company/useCompaniesTableDataCursor_infinite";
 import { useCompany_InfinityCursor } from "../hooks/company/useCompany";
 import { ContactsContainer } from "../contacts/ContactsContainer";
+import { TableToolbarButton } from "../components/TableToolbarButton";
 
 type ViewBigDataContentProps = Omit<CompaniesInfiniteQueryResult, "isLoading"> & {
   globalFilter: string;
@@ -35,6 +36,7 @@ function ViewBigDataContent({
   sorting,
   setSorting,
   hasNextPage,
+  downloadAll,
 }: ViewBigDataContentProps) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>(() => {
     const firstRowId = tableData[0]?.id;
@@ -95,11 +97,23 @@ function ViewBigDataContent({
   );
 
   console.log("Rendering +++++++ .... ViewBigDataContent, selectedCompanyId> ", selectedCompanyId);
+  const tableToolbarDownloadAllBtn = (
+    <TableToolbarButton callbackFn={downloadAll} isLoading={isFetching} isDisabled={!hasNextPage} />
+  );
   return (
     <>
       <div className="flex gap-20  items-start pt-6 bg-bg-background">
         <section className="">
-          <DataTable table={table} {...{ totalDbRowCount, isFetching, fetchNextPage, hasNextPage }} />
+          <DataTable
+            table={table}
+            {...{
+              totalDbRowCount,
+              isFetching,
+              fetchNextPage,
+              hasNextPage,
+              toolbarButtons: [tableToolbarDownloadAllBtn],
+            }}
+          />
         </section>
         <section className="flex flex-col gap-5">
           <div className="flex flex-col text-text-body">

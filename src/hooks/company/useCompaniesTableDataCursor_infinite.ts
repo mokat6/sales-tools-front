@@ -5,7 +5,7 @@ import {
   type UseInfiniteQueryResult,
 } from "@tanstack/react-query";
 import { apiClient } from "../../api/ApiClient";
-import React from "react";
+import React, { useRef } from "react";
 import type { ColumnSort } from "@tanstack/react-table";
 import type { CompaniesResponseCursor } from "../../api/SwaggerSdk";
 
@@ -24,6 +24,8 @@ export const useCompaniesTableDataCursor_infinite = ({
   globalFilter,
   columnSort,
 }: useCompaniesTableDataCursor_infiniteProps) => {
+  const isDownloadAllRef = useRef(false);
+
   const { data, fetchNextPage, isLoading, hasNextPage, isFetching } = useInfiniteQuery({
     queryKey: ["companies-infinite-cursor", globalFilter, columnSort?.id, columnSort?.desc],
     queryFn: ({ pageParam }) =>
@@ -33,6 +35,7 @@ export const useCompaniesTableDataCursor_infinite = ({
         search: globalFilter,
         sortBy: columnSort?.id,
         sortDirection: columnSort?.desc ? "desc" : "asc",
+        isDownloadAll: isDownloadAllRef.current,
       }),
     initialPageParam: "",
     getNextPageParam: (last) => last.pagination?.nextCursor,
@@ -46,6 +49,12 @@ export const useCompaniesTableDataCursor_infinite = ({
   const tableData = React.useMemo(() => data?.pages.flatMap((page) => page.companies ?? []) ?? [], [data]);
   const totalDbRowCount = React.useMemo(() => data?.pages?.[0].pagination?.totalCount ?? 0, [data]);
 
+  const downloadAll = React.useCallback(async () => {
+    isDownloadAllRef.current = true;
+    await fetchNextPage();
+    isDownloadAllRef.current = false;
+  }, [fetchNextPage]);
+
   return {
     tableData,
     totalDbRowCount,
@@ -53,5 +62,6 @@ export const useCompaniesTableDataCursor_infinite = ({
     isFetching,
     hasNextPage,
     fetchNextPage,
+    downloadAll,
   };
 };

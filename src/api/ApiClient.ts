@@ -22,7 +22,14 @@ export const apiClient = {
   getCompanies: async ({ pageIndex, pageSize }: { pageIndex?: number; pageSize?: number }) =>
     swaggerSdk.listCompanies(pageIndex, pageSize),
   getCompaniesCursor: async (p?: getCompaniesCursorProps) =>
-    swaggerSdk.listCompaninesWithCursor(p?.pageSize, p?.cursor, p?.search, p?.sortBy, p?.sortDirection),
+    swaggerSdk.listCompaninesWithCursor(
+      p?.pageSize,
+      p?.cursor,
+      p?.search,
+      p?.sortBy,
+      p?.sortDirection,
+      p?.isDownloadAll
+    ),
   getContacts: async (compId: number) => await swaggerSdk.getCompanyContacts(compId),
   deleteCompany: async (compId: number) => await swaggerSdk.deleteCompany(compId),
   patchCompany: async ({ compId, body }: { compId: number; body: ICompanyDto }) => {
@@ -43,4 +50,5 @@ type getCompaniesCursorProps = {
   search?: string;
   sortBy?: string;
   sortDirection?: string;
+  isDownloadAll?: boolean;
 };

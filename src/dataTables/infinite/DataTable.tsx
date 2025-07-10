@@ -5,7 +5,6 @@ import type { CompanyDto } from "../../api/SwaggerSdk";
 import type { FetchNextPageFn } from "../../hooks/company/useCompaniesTableDataCursor_infinite";
 import { TextInput } from "../../components/TextInput";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
-import { TableFooterButton } from "../../components/TableFooterButton";
 
 export type DataTableProps = {
   table: Table<CompanyDto>;
@@ -13,9 +12,17 @@ export type DataTableProps = {
   isFetching: boolean;
   fetchNextPage: FetchNextPageFn;
   hasNextPage: boolean;
+  toolbarButtons: React.ReactNode[];
 };
 
-export const DataTable = ({ table, totalDbRowCount, isFetching, fetchNextPage, hasNextPage }: DataTableProps) => {
+export const DataTable = ({
+  table,
+  totalDbRowCount,
+  isFetching,
+  fetchNextPage,
+  hasNextPage,
+  toolbarButtons,
+}: DataTableProps) => {
   const scrollingTableContainerRef = useRef<HTMLDivElement>(null);
   const { rows } = table.getRowModel();
 
@@ -77,7 +84,12 @@ export const DataTable = ({ table, totalDbRowCount, isFetching, fetchNextPage, h
         <div>
           Loaded {totalFetched} of {totalDbRowCount} results
         </div>
-        <TableFooterButton />
+        {/* Toolbar buttons */}
+        <div>
+          {toolbarButtons.map((button, i) => (
+            <div key={i}>{button}</div>
+          ))}
+        </div>
       </div>
     </div>
   );

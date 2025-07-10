@@ -23,9 +23,10 @@ export interface ISwaggerSdk {
      * @param search (optional) 
      * @param sortBy (optional) 
      * @param sortDirection (optional) 
+     * @param isDownloadAll (optional) 
      * @return OK
      */
-    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined, sortBy?: string | undefined, sortDirection?: string | undefined): Promise<CompaniesResponseCursor>;
+    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined, sortBy?: string | undefined, sortDirection?: string | undefined, isDownloadAll?: boolean | undefined): Promise<CompaniesResponseCursor>;
 
     /**
      * @return OK
@@ -127,9 +128,10 @@ export class SwaggerSdk implements ISwaggerSdk {
      * @param search (optional) 
      * @param sortBy (optional) 
      * @param sortDirection (optional) 
+     * @param isDownloadAll (optional) 
      * @return OK
      */
-    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined, sortBy?: string | undefined, sortDirection?: string | undefined, signal?: AbortSignal): Promise<CompaniesResponseCursor> {
+    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined, sortBy?: string | undefined, sortDirection?: string | undefined, isDownloadAll?: boolean | undefined, signal?: AbortSignal): Promise<CompaniesResponseCursor> {
         let url_ = this.baseUrl + "/api/Companies/cursor?";
         if (pageSize === null)
             throw new Error("The parameter 'pageSize' cannot be null.");
@@ -151,6 +153,10 @@ export class SwaggerSdk implements ISwaggerSdk {
             throw new Error("The parameter 'sortDirection' cannot be null.");
         else if (sortDirection !== undefined)
             url_ += "sortDirection=" + encodeURIComponent("" + sortDirection) + "&";
+        if (isDownloadAll === null)
+            throw new Error("The parameter 'isDownloadAll' cannot be null.");
+        else if (isDownloadAll !== undefined)
+            url_ += "isDownloadAll=" + encodeURIComponent("" + isDownloadAll) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
