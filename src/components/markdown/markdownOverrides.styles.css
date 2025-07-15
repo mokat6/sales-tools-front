@@ -1,0 +1,23 @@
+/* preview box */
+.mdEdit123 .wmde-markdown, 
+/* edit box */
+.mdEdit123 .wmde-markdown-var {
+  --color-fg-default: var(--color-text-body) !important; /* text */
+  --color-canvas-default: var(--color-bg-table) !important; /* background */
+  --color-canvas-subtle: var(--color-bg-background) !important; /* code block */
+  --color-border-default: var(--color-border) !important; /* border (shadow), hr main color */
+  --color-border-muted: var(--color-border) !important; /* # title under-line , --- hr under-line */
+  --color-fg-muted: var(--color-text-greyed-out) !important; /* text color in quotes: >quote */
+
+  /* TOOLBAR BUTTONS */
+  /* hover: text/icon color */
+  --color-accent-fg: var(--color-action-primary) !important;
+
+  /* hover: background*/
+  /* if need transparency, delete this, add hover:!bg-bg-row-selected/40 to rerender button className */
+  --color-neutral-muted: var(--color-bg-row-selected) !important;
+}
+
+.mdEdit123 .w-md-editor-toolbar {
+  background: var(--color-bg-header-row) !important;
+}

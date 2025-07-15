@@ -18,7 +18,7 @@ export const Modal = ({ open, onOpenChange, title, children, position = "center"
         <Dialog.Content
           className={`fixed top-1/2 border border-border ${
             position === "center" ? "left-1/2" : "left-1/4"
-          } w-[90vw] max-w-md -translate-x-1/2 -translate-y-1/2 bg-bg-background p-6 rounded-lg shadow-lg z-50`}
+          } w-full max-w-7xl -translate-x-1/2 -translate-y-1/2 bg-bg-background p-6 rounded-lg shadow-lg z-50`}
         >
           {title && <Dialog.Title className="text-lg font-semibold text-text-body mb-4">{title}</Dialog.Title>}
           {children}
