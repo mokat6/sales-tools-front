@@ -1,5 +1,5 @@
 import { CompClassificationDto } from "../api/SwaggerSdk";
-import { useUpdateClassification_infinityCursor } from "../hooks/company/useUpdateClassification";
+import { usePatchCompanyInfinite } from "../hooks/company/usePatchCompany";
 import { MultiSelect } from "./MultiSelect";
 import { formatters } from "../format/formatters";
 import { isDefined } from "../helpers/isDefined";
@@ -18,7 +18,7 @@ const options = Object.entries(CompClassificationDto)
   }));
 
 export default function ClassificationSelector({ id, value }: ClassificationSelectorProps) {
-  const mutation = useUpdateClassification_infinityCursor();
+  const mutation = usePatchCompanyInfinite();
 
   const onValueChange = (newValues: CompClassificationDto[]) => {
     if (!isDefined(id)) return;

@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Select } from "../components/Select";
-import { TextInput } from "../components/TextInput";
-import { useContacts } from "../hooks/contact/useContacts";
-import { columns } from "./columns.tsx";
-import { ContactTypeDto } from "../api/SwaggerSdk.ts";
+import { Select } from "@/components/Select";
+import { TextInput } from "@/components/TextInput";
+import { useContacts } from "@/hooks/contact/useContacts";
+import { ContactTypeDto } from "@/api/SwaggerSdk.ts";
+import { Button } from "@/components/Button.tsx";
+import useCreateContact from "@/hooks/contact/useCreateContact.ts";
 import { ContactTable } from "./ContactTable.tsx";
-import { Button } from "../components/Button.tsx";
-import useCreateContact from "../hooks/contact/useCreateContact.ts";
+import { columns } from "./columns.tsx";
 
 const options = [
   { label: "Email", value: ContactTypeDto.Email },
@@ -27,7 +27,6 @@ export const ContactsContainer = ({ compId }: ContactsContainerProps) => {
 
   const { data, isLoading } = useContacts(compId);
 
-  console.log("rerender XXXXX" + Math.random() * 1000);
   const mutation = useCreateContact();
 
   const handleCreateNewContact = () => {

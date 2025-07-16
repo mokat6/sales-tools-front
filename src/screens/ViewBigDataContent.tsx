@@ -3,7 +3,7 @@ import ClassificationSelector from "../components/ClassificationSelector";
 import DeleteCompButton from "../components/DeleteCompButton";
 import { useCallback, useState } from "react";
 import formatCompany from "../format/formatCompany";
-import { DataTable } from "../dataTables/infinite/DataTable";
+import { MasterTable } from "../screenFeatures/ViewBigData/masterTable/MasterTable";
 import {
   getCoreRowModel,
   useReactTable,
@@ -12,13 +12,13 @@ import {
   type Updater,
 } from "@tanstack/react-table";
 import { CompanyDto } from "../api/SwaggerSdk";
-import { columns } from "../dataTables/infinite/columns";
+import { columns } from "@/screenFeatures/ViewBigData/masterTable/columns";
 
 import type { CompaniesInfiniteQueryResult } from "../hooks/company/useCompaniesTableDataCursor_infinite";
 import { useCompany_InfinityCursor } from "../hooks/company/useCompany";
-import { ContactsContainer } from "../contacts/ContactsContainer";
+import { ContactsContainer } from "@/screenFeatures/ViewBigData/contacts/ContactsContainer";
 import { TableToolbarButton } from "../components/TableToolbarButton";
-import { MarkdownNoteModal } from "../panels/MarkdownNoteModal";
+import { MarkdownNoteModal } from "../screenFeatures/ViewBigData/MarkdownNoteModal";
 import { MarkDownPreview } from "../components/markdown/MarkDownPreview";
 
 type ViewBigDataContentProps = Omit<CompaniesInfiniteQueryResult, "isLoading"> & {
@@ -111,7 +111,7 @@ function ViewBigDataContent({
     <>
       <div className="flex gap-20  items-start pt-6 bg-bg-background">
         <section className="">
-          <DataTable
+          <MasterTable
             table={table}
             {...{
               totalDbRowCount,

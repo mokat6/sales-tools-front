@@ -48,7 +48,7 @@ export default function () {
   });
 }
 
-export function useUpdateClassification_infinityCursor() {
+export function usePatchCompanyInfinite() {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -91,7 +91,7 @@ export function useUpdateClassification_infinityCursor() {
     },
 
     onError: (_err, variables, context) => {
-      console.error(`Failed updating classification on comp id ${variables.compId} : `, _err);
+      console.error(`Failed patching company on comp id ${variables.compId} : `, _err);
       if (!context?.touchedQueries) return;
 
       for (const { queryKey, previousData } of context.touchedQueries) {
@@ -99,7 +99,7 @@ export function useUpdateClassification_infinityCursor() {
       }
     },
     onSuccess: (returnedCompany, variables) => {
-      console.log("classification update success: ", returnedCompany);
+      console.log("company patch success: ", returnedCompany);
       // queryClient.setQueryData   ... update with returnedCompany if needed
       queryClient.invalidateQueries({ queryKey: ["company-from-cached-list", variables.compId] });
     },

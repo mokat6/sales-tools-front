@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { ContactDto } from "../api/SwaggerSdk";
-import { formatters } from "../format/formatters";
-import { RowActions } from "../components/RowActions";
+import type { ContactDto } from "@/api/SwaggerSdk";
+import { formatters } from "@/format/formatters";
+import { RowActions } from "@/components/RowActions";
 
 export const columns: ColumnDef<ContactDto>[] = [
   {

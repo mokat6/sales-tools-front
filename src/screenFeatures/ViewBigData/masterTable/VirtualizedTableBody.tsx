@@ -1,7 +1,7 @@
-import { flexRender, type Row } from "@tanstack/react-table";
-import type { CompanyDto } from "../../api/SwaggerSdk";
 import React from "react";
+import { flexRender, type Row } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import type { CompanyDto } from "@/api/SwaggerSdk";
 
 type VirtualizedTableBodyProps = {
   rows: Row<CompanyDto>[];

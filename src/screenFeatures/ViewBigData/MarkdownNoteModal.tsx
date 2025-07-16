@@ -1,11 +1,11 @@
-import { Button } from "../components/Button";
+import { Button } from "../../components/Button";
 import { useEffect, useState } from "react";
-import { Modal } from "../components/Modal";
+import { Modal } from "../../components/Modal";
 
 // import React from "react";
-import { MarkDownEditor } from "../components/markdown/MarkDownEditor";
-import { useUpdateClassification_infinityCursor } from "../hooks/company/useUpdateClassification";
-import { isDefined } from "../helpers/isDefined";
+import { MarkDownEditor } from "../../components/markdown/MarkDownEditor";
+import { usePatchCompanyInfinite } from "../../hooks/company/usePatchCompany";
+import { isDefined } from "../../helpers/isDefined";
 
 type MarkdownNoteModalProps = {
   companyNote: string | undefined;
@@ -21,7 +21,7 @@ export const MarkdownNoteModal = ({ companyNote, compId }: MarkdownNoteModalProp
     setDraft(companyNote);
   }, [companyNote]);
 
-  const { mutate } = useUpdateClassification_infinityCursor();
+  const { mutate } = usePatchCompanyInfinite();
 
   const patchNote = () => {
     if (draft === companyNote || !isDefined(compId)) return;

@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import type { CompanyDto } from "../../api/SwaggerSdk";
+import type { CompanyDto } from "@/api/SwaggerSdk";
 
 export const columns: ColumnDef<CompanyDto>[] = [
   {

@@ -1,12 +1,12 @@
-import { flexRender, type Table } from "@tanstack/react-table";
 import { useCallback, useEffect, useRef } from "react";
-import { VirtualizedTableBody } from "./VirtualizedTableBody";
-import type { CompanyDto } from "../../api/SwaggerSdk";
-import type { FetchNextPageFn } from "../../hooks/company/useCompaniesTableDataCursor_infinite";
-import { TextInput } from "../../components/TextInput";
 import { ArrowDown, ArrowUp, ArrowUpDown, FilterX } from "lucide-react";
+import { flexRender, type Table } from "@tanstack/react-table";
+import { VirtualizedTableBody } from "./VirtualizedTableBody";
+import type { CompanyDto } from "@/api/SwaggerSdk";
+import type { FetchNextPageFn } from "@/hooks/company/useCompaniesTableDataCursor_infinite";
+import { TextInput } from "@/components/TextInput";
 
-export type DataTableProps = {
+export type MasterTableProps = {
   table: Table<CompanyDto>;
   totalDbRowCount: number;
   isFetching: boolean;
@@ -31,14 +31,14 @@ const emptyState = (isFilterApplied: boolean) => (
   </div>
 );
 
-export const DataTable = ({
+export const MasterTable = ({
   table,
   totalDbRowCount,
   isFetching,
   fetchNextPage,
   hasNextPage,
   toolbarButtons,
-}: DataTableProps) => {
+}: MasterTableProps) => {
   const scrollingTableContainerRef = useRef<HTMLDivElement>(null);
   const { rows } = table.getRowModel();
 

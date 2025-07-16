@@ -1,6 +1,6 @@
 import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
-import type { ContactDto } from "../api/SwaggerSdk";
 import { ArrowUpDown, ArrowDown, ArrowUp } from "lucide-react";
+import type { ContactDto } from "@/api/SwaggerSdk";
 
 type ContactTableProps = {
   columns: ColumnDef<ContactDto>[];
