@@ -18,6 +18,8 @@ import type { CompaniesInfiniteQueryResult } from "../hooks/company/useCompanies
 import { useCompany_InfinityCursor } from "../hooks/company/useCompany";
 import { ContactsContainer } from "../contacts/ContactsContainer";
 import { TableToolbarButton } from "../components/TableToolbarButton";
+import { MarkdownNoteModal } from "../panels/MarkdownNoteModal";
+import { MarkDownBox } from "../components/markdown/MarkDownBox";
 
 type ViewBigDataContentProps = Omit<CompaniesInfiniteQueryResult, "isLoading"> & {
   globalFilter: string;
@@ -128,10 +130,15 @@ function ViewBigDataContent({
             companyId={selectedCompanyId}
             tableRowReselectFn={reselectAfterCompanyDelete}
           />
+
+          <MarkdownNoteModal />
         </section>
         <section className="flex flex-col gap-10">
-          <div className="min-h-135">
+          <div className="min-h-135 flex gap-10 items-start">
             <KeyValue keyTitle="Key" valueTitle="Value" data={formatCompany(selectedCompany)} />
+            <div className="w-120">
+              <MarkDownBox />
+            </div>
           </div>
           <ContactsContainer compId={selectedCompanyId} />
         </section>

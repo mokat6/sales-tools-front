@@ -1,11 +1,17 @@
 @import "tailwindcss";
 @import "@fontsource/roboto";
 @import "@fontsource/roboto/800.css";
+@import "./components/markdown/markdownOverrides.styles.css";
 
 /* @custom-variant dark (&:where(.dark, .dark *)); */
 @layer base {
   body {
     @apply font-main-font;
+  }
+
+  /* sets browser level dark mode: scrollbars, checkboxes, input fields,... */
+  html.dark {
+    color-scheme: dark;
   }
 }
 
