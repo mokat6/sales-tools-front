@@ -1,6 +1,5 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 // import "@uiw/react-markdown-preview/markdown.css";
-import * as Tooltip from "@radix-ui/react-tooltip";
 import { Button } from "../components/Button";
 import { useState } from "react";
 import { Modal } from "../components/Modal";
@@ -9,6 +8,7 @@ import MDEditor, { commands } from "@uiw/react-md-editor/nohighlight";
 // import MDEditor, { commands, type ICommand } from "@uiw/react-md-editor";
 
 import React from "react";
+import { Tooltip } from "../components/Tooltip";
 
 type MarkdownNoteModalProps = {
   draft: string | undefined;
@@ -67,31 +67,19 @@ export const MarkdownNoteModal = () => {
                 );
 
                 return (
-                  <Tooltip.Provider delayDuration={100}>
-                    <Tooltip.Root>
-                      <Tooltip.Trigger asChild>
-                        <button
-                          aria-label={command.buttonProps?.["aria-label"]}
-                          disabled={disabled}
-                          className="!p-2 !h-8 !w-8 !m-1"
-                          onClick={(evn) => {
-                            evn.stopPropagation();
-                            executeCommand(command, command.groupName);
-                          }}
-                        >
-                          {fixedIcon}
-                        </button>
-                      </Tooltip.Trigger>
-                      <Tooltip.Content
-                        className="bg-text-body  text-bg-background text-sm px-2 py-1 rounded shadow-md"
-                        side="top"
-                        sideOffset={5}
-                      >
-                        {command.buttonProps?.title ?? command.name}
-                        <Tooltip.Arrow className="fill-text-body" />
-                      </Tooltip.Content>
-                    </Tooltip.Root>
-                  </Tooltip.Provider>
+                  <Tooltip message={command.buttonProps?.title ?? command.name} noPortal>
+                    <button
+                      aria-label={command.buttonProps?.["aria-label"]}
+                      disabled={disabled}
+                      className="!p-2 !h-8 !w-8 !m-1"
+                      onClick={(evn) => {
+                        evn.stopPropagation();
+                        executeCommand(command, command.groupName);
+                      }}
+                    >
+                      {fixedIcon}
+                    </button>
+                  </Tooltip>
                 );
               },
             }}

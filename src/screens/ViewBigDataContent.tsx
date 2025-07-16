@@ -100,7 +100,12 @@ function ViewBigDataContent({
 
   console.log("Rendering +++++++ .... ViewBigDataContent, selectedCompanyId> ", selectedCompanyId);
   const tableToolbarDownloadAllBtn = (
-    <TableToolbarButton callbackFn={downloadAll} isLoading={isFetching} isDisabled={!hasNextPage} />
+    <TableToolbarButton
+      callbackFn={downloadAll}
+      isLoading={isFetching}
+      isDisabled={!hasNextPage}
+      tooltipMsg="Load all rows in one go"
+    />
   );
   return (
     <>
