@@ -88,7 +88,7 @@
 }
 
 .dark {
-  --color-action-primary: #699dff; /* lighter blue for dark bg */
+  --color-action-primary: #415d91; /* lighter blue for dark bg */
   --color-action-secondary: #2b3550; /* muted navy / desaturated blue */
 
   --color-component-border: #3a3a3a; /* medium-dark grey border */
@@ -101,12 +101,14 @@
   --color-text-greyed-out: #7d7d7d; /* greyed-out/inactive text */
   --color-text-on-primary-action: #ffffff; /* text on primary buttons: white */
 
-  --color-border: #5b5b5b; /* same as component-border */
-  --color-bg-background: #121212; /* true dark background */
+  --color-border: #2f2f2f; /* same as component-border */
+
+  --color-bg-background: #212121; /* true dark background */
+  --color-bg-table: #171717; /* table/card background */
+
   --color-bg-header-row: #4f4f4f; /* slightly elevated surface */
   --color-bg-header-hover: #747474; /* grey*/
 
-  --color-bg-table: #373737; /* table/card background */
   --color-bg-disabled: #575757;
 
   --color-header-row-text: #b3b3b3; /* muted light grey text */
