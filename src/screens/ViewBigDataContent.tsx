@@ -11,7 +11,7 @@ import {
   type SortingState,
   type Updater,
 } from "@tanstack/react-table";
-import type { CompanyDto } from "../api/SwaggerSdk";
+import { CompanyDto } from "../api/SwaggerSdk";
 import { columns } from "../dataTables/infinite/columns";
 
 import type { CompaniesInfiniteQueryResult } from "../hooks/company/useCompaniesTableDataCursor_infinite";
@@ -19,7 +19,7 @@ import { useCompany_InfinityCursor } from "../hooks/company/useCompany";
 import { ContactsContainer } from "../contacts/ContactsContainer";
 import { TableToolbarButton } from "../components/TableToolbarButton";
 import { MarkdownNoteModal } from "../panels/MarkdownNoteModal";
-import { MarkDownBox } from "../components/markdown/MarkDownBox";
+import { MarkDownPreview } from "../components/markdown/MarkDownPreview";
 
 type ViewBigDataContentProps = Omit<CompaniesInfiniteQueryResult, "isLoading"> & {
   globalFilter: string;
@@ -136,13 +136,13 @@ function ViewBigDataContent({
             tableRowReselectFn={reselectAfterCompanyDelete}
           />
 
-          <MarkdownNoteModal />
+          <MarkdownNoteModal companyNote={selectedCompany?.markdownNote} compId={selectedCompanyId} />
         </section>
         <section className="flex flex-col gap-10">
           <div className="min-h-135 flex gap-10 items-start">
             <KeyValue keyTitle="Key" valueTitle="Value" data={formatCompany(selectedCompany)} />
             <div className="w-120">
-              <MarkDownBox />
+              <MarkDownPreview note={selectedCompany?.markdownNote} />
             </div>
           </div>
           <ContactsContainer compId={selectedCompanyId} />

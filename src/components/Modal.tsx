@@ -8,9 +8,10 @@ interface ModalProps {
   title?: string;
   children: ReactNode;
   position?: "center" | "left";
+  ariaDescription: string;
 }
 
-export const Modal = ({ open, onOpenChange, title, children, position = "center" }: ModalProps) => {
+export const Modal = ({ open, onOpenChange, title, children, position = "center", ariaDescription }: ModalProps) => {
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -20,6 +21,7 @@ export const Modal = ({ open, onOpenChange, title, children, position = "center"
             position === "center" ? "left-1/2" : "left-1/4"
           } w-full max-w-7xl -translate-x-1/2 -translate-y-1/2 bg-bg-background p-6 rounded-lg shadow-lg z-50`}
         >
+          <Dialog.Description className="sr-only">{ariaDescription}</Dialog.Description>
           {title && <Dialog.Title className="text-lg font-semibold text-text-body mb-4">{title}</Dialog.Title>}
           {children}
           <Dialog.Close asChild>

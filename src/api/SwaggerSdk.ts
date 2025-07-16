@@ -579,6 +579,7 @@ export class CompanyDto implements ICompanyDto {
     googleMapsUrl?: string | undefined;
     bigFishScore?: number | undefined;
     classification?: CompClassificationDto[] | undefined;
+    markdownNote?: string | undefined;
 
     constructor(data?: ICompanyDto) {
         if (data) {
@@ -607,6 +608,7 @@ export class CompanyDto implements ICompanyDto {
                 for (let item of _data["classification"])
                     this.classification!.push(item);
             }
+            this.markdownNote = _data["markdownNote"];
         }
     }
 
@@ -635,6 +637,7 @@ export class CompanyDto implements ICompanyDto {
             for (let item of this.classification)
                 data["classification"].push(item);
         }
+        data["markdownNote"] = this.markdownNote;
         return data;
     }
 
@@ -659,6 +662,7 @@ export interface ICompanyDto {
     googleMapsUrl?: string | undefined;
     bigFishScore?: number | undefined;
     classification?: CompClassificationDto[] | undefined;
+    markdownNote?: string | undefined;
 }
 
 export class ContactDto implements IContactDto {
