@@ -15,7 +15,6 @@ type MarkDownEditorProps = {
   placeholder?: string;
 };
 
-// export const MarkdownNoteModal = ({ draft, setDraft }: MarkDownEditorProps) => {
 export const MarkDownEditor = ({ placeholder, value, setValue }: MarkDownEditorProps) => {
   placeholder = placeholder ?? "Type your markdown here...";
 
@@ -29,7 +28,7 @@ export const MarkDownEditor = ({ placeholder, value, setValue }: MarkDownEditorP
         onChange={setValue}
         autoFocusEnd={true}
         preview={"live"}
-        // data-color-mode={theme} // no theme, theme controlled by my page globally
+        // data-color-mode={} // no theme, theme controlled by my page globally, and overridden by css
         textareaProps={{
           placeholder,
         }}
