@@ -39,7 +39,7 @@ export function MultiSelect<T extends string>({
       <Popover.Trigger asChild>
         <button
           disabled={disabled}
-          className="inline-flex flex-wrap bg-bg-table items-center gap-1 px-3 py-2 border rounded w-full text-left text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[38px]"
+          className="inline-flex flex-wrap bg-bg-table items-center gap-1 px-3 py-2 border border-border rounded w-full text-left text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[38px]"
           type="button"
         >
           {values.length > 0 ? (
@@ -87,7 +87,7 @@ export function MultiSelect<T extends string>({
       <Popover.Content
         align="start"
         sideOffset={4}
-        className="z-50 w-[200px] max-h-[250px] overflow-auto rounded border bg-bg-table shadow-md p-1"
+        className="z-50 w-[200px] max-h-[250px] overflow-auto rounded bg-bg-table border border-border shadow-md p-1"
       >
         <RovingFocusGroup.Root orientation="vertical">
           {options.map((option) => {
