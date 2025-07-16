@@ -15,7 +15,7 @@
 
   /* hover: background*/
   /* if need transparency, delete this, add hover:!bg-bg-row-selected/40 to rerender button className */
-  --color-neutral-muted: var(--color-bg-row-selected) !important;
+  --color-neutral-muted: var(--color-bg-background) !important;
 }
 
 .mdEdit123 .w-md-editor-toolbar {
