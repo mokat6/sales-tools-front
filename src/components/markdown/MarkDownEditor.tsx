@@ -1,6 +1,7 @@
 // default import is with highlights. No need, buggy, textbox doesn't stretch to height 100%
 // import MDEditor, { commands } from "@uiw/react-md-editor";
 import MDEditor, { commands } from "@uiw/react-md-editor/nohighlight";
+import rehypeSanitize from "rehype-sanitize";
 
 // import the style overrides .css file in global index.css
 // import "./markdownOverrides.styles.css";
@@ -45,6 +46,9 @@ export const MarkDownEditor = ({ placeholder, value, setValue }: MarkDownEditorP
           commands.checkedListCommand,
         ]}
         extraCommands={[]}
+        previewOptions={{
+          rehypePlugins: [[rehypeSanitize]],
+        }}
         components={{
           toolbar: (command, disabled, executeCommand) => {
             if (!command.icon) return;
