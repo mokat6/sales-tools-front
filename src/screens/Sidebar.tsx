@@ -1,37 +1,32 @@
 import { NavLink } from "react-router-dom";
-import { PanelRightClose } from "lucide-react";
+import { Building, LayoutDashboard, MenuIcon, PanelRightClose, Settings, Swords } from "lucide-react";
 
-import { useState } from "react";
+import { useState, type JSX } from "react";
+import type { SideMenuBaseProps } from "./App";
 
 const MENU_ITEMS = [
-  { value: "", label: "View big data" },
-  { value: "newCompany", label: "New Company" },
-  { value: "settings", label: "Settings" },
-  { value: "crm", label: "CRM" },
+  { value: "hamburger", label: <MenuIcon size={29} /> },
+  { value: "", label: <LayoutDashboard size={29} /> },
+  { value: "newCompany", label: <Building size={29} /> },
+  { value: "settings", label: <Settings size={29} /> },
+  { value: "crm", label: <Swords size={29} /> },
 ];
-export default function Sidebar() {
-  const [expanded, setExpanded] = useState(false);
 
-  const togglePanel = () => setExpanded(!expanded);
+type SidebarProps = {
+  Base: ({ className, children }: SideMenuBaseProps) => JSX.Element;
+};
 
+export default function Sidebar({ Base }: SidebarProps) {
   return (
-    <div
-      className={` flex flex-col border-r border-gray-400 transition-[width] overflow-hidden  bg-gray-200 ${
-        expanded ? "w-35" : "w-10"
-      }`}
-    >
-      <PanelRightClose
-        className={`self-end cursor-pointer ${expanded ? "rotate-180" : ""} transition`}
-        onClick={togglePanel}
-      />
+    <Base className={`border-r border-gray-400 transition-[width] overflow-hidden  bg-gray-200 `}>
       {MENU_ITEMS.map(({ value, label }) => {
         return (
           <MenuItem to={value} key={value}>
-            {expanded ? label : label[0]}
+            {label}
           </MenuItem>
         );
       })}
-    </div>
+    </Base>
   );
 }
 
