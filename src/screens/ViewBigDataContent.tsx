@@ -109,8 +109,8 @@ function ViewBigDataContent({
   );
   return (
     <>
-      <div className="flex gap-20  items-start pt-6 bg-bg-background">
-        <section className="">
+      <div className="flex gap-20  items-start  p-6 bg-bg-background">
+        <section className="mt-10">
           <MasterTable
             table={table}
             {...{
