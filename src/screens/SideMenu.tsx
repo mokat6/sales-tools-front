@@ -39,9 +39,9 @@ export default function SideMenu() {
               to={to}
               key={to}
               className={({ isActive }) =>
-                `transition-all duration-300 transform ${
-                  sideMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-6 opacity-0 pointer-events-none"
-                } ${isActive ? "text-text-body" : "text-action-primary"}`
+                `transition-all duration-300 transform animate-slide-in ${
+                  isActive ? "text-text-body" : "text-action-primary"
+                }`
               }
             >
               {icon}
