@@ -1,5 +1,5 @@
-import { Button } from "./Button";
-import useDeleteCompany from "../hooks/company/useDeleteCompany";
+import { Button } from "../../components/Button";
+import useDeleteCompany from "../../hooks/company/useDeleteCompany";
 
 type DeleteCompButtonProps = {
   companyId: number | undefined;

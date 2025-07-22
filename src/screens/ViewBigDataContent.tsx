@@ -1,6 +1,6 @@
 import { KeyValue } from "../components/KeyValue";
-import ClassificationSelector from "../components/ClassificationSelector";
-import DeleteCompButton from "../components/DeleteCompButton";
+import ClassificationSelector from "../screenFeatures/ViewBigData/ClassificationSelector";
+import DeleteCompButton from "../screenFeatures/ViewBigData/DeleteCompButton";
 import { useCallback, useState } from "react";
 import formatCompany from "../format/formatCompany";
 import { MasterTable } from "../screenFeatures/ViewBigData/masterTable/MasterTable";

@@ -1,8 +1,8 @@
-import { CompClassificationDto } from "../api/SwaggerSdk";
-import { usePatchCompanyInfinite } from "../hooks/company/usePatchCompany";
-import { MultiSelect } from "./MultiSelect";
-import { formatters } from "../format/formatters";
-import { isDefined } from "../helpers/isDefined";
+import { CompClassificationDto } from "../../api/SwaggerSdk";
+import { usePatchCompanyInfinite } from "../../hooks/company/usePatchCompany";
+import { MultiSelect } from "../../components/MultiSelect";
+import { formatters } from "../../format/formatters";
+import { isDefined } from "../../helpers/isDefined";
 
 type ClassificationSelectorProps = {
   id?: number;
