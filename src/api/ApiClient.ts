@@ -48,7 +48,7 @@ export const apiClient = {
     const dto = CreateContactDto.fromJS(newContact);
     return await swaggerSdk.createCompanyContact(dto);
   },
-  deleteContact: async (contactId: number) => await swaggerSdk.deleteContact(contactId),
+  deleteContact: async (contact: IContactDto) => await swaggerSdk.deleteContact(contact.id),
   updateContactPut: async (contact: IContactDto) => {
     const contactDto = ContactDto.fromJS(contact);
     await swaggerSdk.updateContact(contactDto);

@@ -6,7 +6,7 @@ import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 
 type getContactColumnsProps = {
   onEditContact: (contact: ContactDto) => void;
-  onDeleteContact: (contactId: number) => void;
+  onDeleteContact: (contact: ContactDto) => void;
 };
 
 export const getContactColumns = ({
@@ -77,7 +77,7 @@ export const getContactColumns = ({
             icon: <TrashIcon />,
             label: "Delete",
             intent: "danger",
-            onSelect: () => onDeleteContact(Number(contact.id)),
+            onSelect: () => onDeleteContact(contact),
           },
         ];
 

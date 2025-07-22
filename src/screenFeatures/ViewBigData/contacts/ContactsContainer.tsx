@@ -50,7 +50,7 @@ export const ContactsContainer = ({ compId }: ContactsContainerProps) => {
     );
   };
 
-  const deleteMutate = useDeleteContact(compId);
+  const deleteMutate = useDeleteContact();
 
   const handleEditContact = (contact: IContactDto) => {
     setEditingContact(contact);
