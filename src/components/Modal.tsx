@@ -8,18 +8,34 @@ interface ModalProps {
   title?: string;
   children: ReactNode;
   position?: "center" | "left";
+  size?: "sm" | "md" | "lg" | "xl";
   ariaDescription: string;
 }
 
-export const Modal = ({ open, onOpenChange, title, children, position = "center", ariaDescription }: ModalProps) => {
+const sizeClassMap = {
+  sm: "max-w-sm",
+  md: "max-w-md",
+  lg: "max-w-3xl",
+  xl: "max-w-7xl",
+};
+
+export const Modal = ({
+  open,
+  onOpenChange,
+  title,
+  children,
+  position = "center",
+  ariaDescription,
+  size = "xl",
+}: ModalProps) => {
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 z-40" />
         <Dialog.Content
-          className={`fixed top-1/2 border border-border ${
-            position === "center" ? "left-1/2" : "left-1/4"
-          } w-full max-w-7xl -translate-x-1/2 -translate-y-1/2 bg-bg-background p-6 rounded-lg shadow-lg z-50`}
+          className={`fixed top-1/2 border border-border ${position === "center" ? "left-1/2" : "left-1/4"} w-full ${
+            sizeClassMap[size]
+          } -translate-x-1/2 -translate-y-1/2 bg-bg-background p-6 rounded-lg shadow-lg z-50`}
         >
           <Dialog.Description className="sr-only">{ariaDescription}</Dialog.Description>
           {title && <Dialog.Title className="text-lg font-semibold text-text-body mb-4">{title}</Dialog.Title>}

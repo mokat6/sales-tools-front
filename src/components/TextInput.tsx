@@ -1,5 +1,5 @@
 export type TextInputProps = {
-  value: string;
+  value: string | undefined;
   onChange: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;

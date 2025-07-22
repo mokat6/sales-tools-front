@@ -2,20 +2,20 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../api/ApiClient";
 import { type IContactDto } from "../../api/SwaggerSdk";
 
-export default function useDeleteContact(compId: number) {
+export default function useDeleteContact(compId: number | undefined) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: apiClient.deleteContact,
 
     onMutate: async (delContactId: number) => {
+      if (!compId) throw new Error("compId is undefined in useDeleteContact");
+
       const queryKey = ["contacts", compId];
       await queryClient.cancelQueries({ queryKey });
-
       const previousContacts = queryClient.getQueryData<IContactDto[]>(queryKey);
 
       const updatedContacts = previousContacts?.filter((contact) => contact.id !== delContactId);
-
       queryClient.setQueryData(queryKey, updatedContacts);
 
       return { queryKey, previousContacts };

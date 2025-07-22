@@ -1,5 +1,12 @@
 import { dtoToJsonPatch as dtoToJsonPatchOperations } from "./dtoToJsonPatch";
-import { CreateContactDto, SwaggerSdk, type ICompanyDto, type ICreateContactDto } from "./SwaggerSdk";
+import {
+  ContactDto,
+  CreateContactDto,
+  SwaggerSdk,
+  type ICompanyDto,
+  type IContactDto,
+  type ICreateContactDto,
+} from "./SwaggerSdk";
 
 const BASE_URL = "http://localhost:5243";
 
@@ -42,6 +49,10 @@ export const apiClient = {
     return await swaggerSdk.createCompanyContact(dto);
   },
   deleteContact: async (contactId: number) => await swaggerSdk.deleteContact(contactId),
+  updateContactPut: async (contact: IContactDto) => {
+    const contactDto = ContactDto.fromJS(contact);
+    await swaggerSdk.updateContact(contactDto);
+  },
 };
 
 type getCompaniesCursorProps = {

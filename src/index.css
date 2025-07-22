@@ -46,9 +46,9 @@
   --color-warning-300: #f8f2b4;
   --color-warning-500: #ae800f;
 
-  --color-error-100: #fdf2f2; /*reds*/
-  --color-error-300: #e7d1cc;
-  --color-error-500: #c21c26;
+  --color-danger-100: #fdf2f2; /*reds*/
+  --color-danger-300: #e7d1cc;
+  --color-danger-500: #c21c26;
 
   /*  --- --- --- ---  */
   --color-action-primary: #2961ee; /*blue*/
