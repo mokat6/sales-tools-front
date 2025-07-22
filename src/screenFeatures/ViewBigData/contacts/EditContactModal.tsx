@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { contactTypeOptions } from "./ContactsContainer";
 import { isDefined } from "@/helpers/isDefined";
 import { useUpdateContact } from "@/hooks/contact/useUpdateContact";
+import { Button } from "@/components/Button";
 
 type EditContactModalProps = {
   isOpen: boolean;
@@ -35,7 +36,14 @@ export const EditContactModal = ({ isOpen, setIsOpen, contact }: EditContactModa
 
   useEffect(() => {
     setFormState(getInitialStateFromContact(contact));
+    setErrors({});
   }, [contact]);
+
+  const handleCancel = () => {
+    setFormState(getInitialStateFromContact(contact));
+    setErrors({});
+    setIsOpen(false);
+  };
 
   const validate = () => {
     const newErrors: errorsType = {};
@@ -66,7 +74,7 @@ export const EditContactModal = ({ isOpen, setIsOpen, contact }: EditContactModa
     e.preventDefault();
     if (!validate()) return;
 
-    console.log("submitting...", e);
+    console.log("submitting...", formState);
     updateContactMutation.mutate({ ...contact, ...formState });
     setIsOpen(false);
   };
@@ -89,7 +97,7 @@ export const EditContactModal = ({ isOpen, setIsOpen, contact }: EditContactModa
           <TextInput value={formState.value} onChange={(val) => setFormState({ ...formState, value: val })}></TextInput>
           {/* {errors.value && <p className="text-red-500 text-sm">{errors.value}</p>} */}
           {errors.value?.map((err, idx) => (
-            <p key={idx} className="text-red-500 text-sm">
+            <p key={idx} className="text-danger-500 text-sm">
               {err}
             </p>
           ))}
@@ -128,9 +136,13 @@ export const EditContactModal = ({ isOpen, setIsOpen, contact }: EditContactModa
           </label>
         )}
 
-        <button type="submit" className="self-end bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-          Save
-        </button>
+        <div className="flex justify-end gap-2 mt-4">
+          <Button onClick={handleCancel}>Cancel</Button>
+          <Button type="submit">Save</Button>
+        </div>
+        {/* <button type="submit" className="self-end bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"> */}
+        {/* Save
+        </button> */}
       </form>
     </Modal>
   );
