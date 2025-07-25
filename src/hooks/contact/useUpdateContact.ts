@@ -1,5 +1,6 @@
 import { apiClient } from "@/api/ApiClient";
 import type { IContactDto } from "@/api/SwaggerSdk";
+import { toast } from "@/components/toast/toastService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useUpdateContact = () => {
@@ -19,13 +20,13 @@ export const useUpdateContact = () => {
       return { queryKey, prev };
     },
     onError: (err, vars, context) => {
+      toast.danger("Contact update failed");
       console.error(`Error updating contact with id ${vars}: `, err);
       if (!context) return;
       queryClient.setQueryData(context.queryKey, context.prev);
     },
-    onSuccess: (data) => {
-      // TODO: add toast here;
-      console.log("data > ", data);
+    onSuccess: (data, vars) => {
+      toast.success(`Contact updated - ${vars.value}`);
     },
   });
 };
