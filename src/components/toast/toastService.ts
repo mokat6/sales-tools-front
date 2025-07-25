@@ -1,6 +1,6 @@
 import type { PublishParam, ToastVariant } from "./Toaster";
 
-// Internal implementation - event bus design pattern.
+// Internal implementation - `event bus` design-pattern.
 
 type EventHandler = (payload: PublishParam) => void;
 
