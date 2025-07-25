@@ -89,7 +89,7 @@ export const EditContactModal = ({ isOpen, setIsOpen, contact }: EditContactModa
             value={formState.type}
             options={contactTypeOptions}
             triggerClassName="min-w-30"
-            contentClassName="z-50"
+            contentClassName="z-z-popover"
           />
         </label>
         <label>

@@ -35,7 +35,7 @@ export const Toaster = () => {
       {toasts.map(({ id, description, time, variant }) => (
         <RadixToast.Root
           duration={time ?? 5000}
-          open={true} // needs to be together with onOpenChange
+          // open={true} // needs to be together with onOpenChange
           onOpenChange={(open) => {
             if (!open) {
               // remove the toast from your state
@@ -46,11 +46,32 @@ export const Toaster = () => {
           className={`rounded px-4 py-3 shadow-lg text-white data-[state=open]:animate-slideIn data-[state=closed]:animate-hide
             ${variant === "success" ? "bg-success-300" : variant === "danger" ? "bg-danger-300" : "bg-info-300"}`}
         >
-          <RadixToast.Description>{description}</RadixToast.Description>
+          <RadixToast.Description>
+            {description + "  "}
+            <Countdown />
+          </RadixToast.Description>
           <RadixToast.Close />
         </RadixToast.Root>
       ))}
-      <RadixToast.Viewport className="fixed bottom-4 right-4 w-[360px] max-w-full z-50" />
+      <RadixToast.Viewport className="fixed bottom-4 right-4 w-[360px] max-w-full z-z-toast" />
     </RadixToast.Provider>
   );
+};
+
+const Countdown = () => {
+  const [time, setTime] = useState(5);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime((t) => {
+        if (t === 0) {
+          clearInterval(interval);
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return <span>{time}</span>;
 };

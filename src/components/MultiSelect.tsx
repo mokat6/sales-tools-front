@@ -87,7 +87,7 @@ export function MultiSelect<T extends string>({
       <Popover.Content
         align="start"
         sideOffset={4}
-        className="z-50 w-[200px] max-h-[250px] overflow-auto rounded bg-bg-table border border-border shadow-md p-1"
+        className="z-z-popover w-[200px] max-h-[250px] overflow-auto rounded bg-bg-table border border-border shadow-md p-1"
       >
         <RovingFocusGroup.Root orientation="vertical">
           {options.map((option) => {

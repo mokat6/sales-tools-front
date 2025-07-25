@@ -60,7 +60,7 @@ export const MarkDownEditor = ({ placeholder, value, setValue }: MarkDownEditorP
             });
 
             return (
-              <Tooltip message={command.buttonProps?.title ?? command.name} contentClass="z-50">
+              <Tooltip message={command.buttonProps?.title ?? command.name} contentClass="z-z-tooltip">
                 <button
                   aria-label={command.buttonProps?.["aria-label"]}
                   disabled={disabled}

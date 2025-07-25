@@ -33,6 +33,11 @@
 
   /* -------------*/
   /* --------------*/
+  --z-index-z-overlay: 40;
+  --z-index-z-modal: 40;
+  --z-index-z-tooltip: 50;
+  --z-index-z-popover: 50; /* multiselect, comp classification */
+  --z-index-z-toast: 60;
   /* --------------*/
   --color-success-100: #f0fcf5; /*success background*/
   --color-success-300: #caf2d8; /*success border*/

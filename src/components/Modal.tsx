@@ -31,11 +31,11 @@ export const Modal = ({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/50 z-40" />
+        <Dialog.Overlay className="fixed inset-0 bg-black/50 z-z-overlay" />
         <Dialog.Content
           className={`fixed top-1/2 border border-border ${position === "center" ? "left-1/2" : "left-1/4"} w-full ${
             sizeClassMap[size]
-          } -translate-x-1/2 -translate-y-1/2 bg-bg-background p-6 rounded-lg shadow-lg z-50`}
+          } -translate-x-1/2 -translate-y-1/2 bg-bg-background p-6 rounded-lg shadow-lg z-z-modal`}
         >
           <Dialog.Description className="sr-only">{ariaDescription}</Dialog.Description>
           {title && <Dialog.Title className="text-lg font-semibold text-text-body mb-4">{title}</Dialog.Title>}
