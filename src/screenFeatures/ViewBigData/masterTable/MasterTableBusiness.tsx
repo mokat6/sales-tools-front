@@ -1,55 +1,31 @@
 import type { CompaniesInfiniteQueryResult } from "@/hooks/company/useCompaniesTableDataCursor_infinite";
-import {
-  getCoreRowModel,
-  useReactTable,
-  type RowSelectionState,
-  type SortingState,
-  type Updater,
-} from "@tanstack/react-table";
+import { getCoreRowModel, useReactTable, type Updater } from "@tanstack/react-table";
 import { MasterTable } from "./MasterTable";
 import type { CompanyDto } from "@/api/SwaggerSdk";
 import { columns } from "./columns";
-import { forwardRef, useCallback, useImperativeHandle } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle } from "react";
 import { TableToolbarButton } from "@/components/TableToolbarButton";
+import { useMasterTableState } from "@/hooks/zustand/useMasterTableState";
 
-type MasterTableBusinessProps = Omit<CompaniesInfiniteQueryResult, "isLoading"> & {
-  globalFilter: string;
-  setGlobalFilter: React.Dispatch<React.SetStateAction<string>>;
-  sorting: SortingState;
-  setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
-  rowSelection: RowSelectionState;
-  setRowSelection: React.Dispatch<React.SetStateAction<RowSelectionState>>;
-};
+type MasterTableBusinessProps = Omit<CompaniesInfiniteQueryResult, "isLoading"> & {};
 
 export const MasterTableBusiness = forwardRef<MasterTableHandle, MasterTableBusinessProps>(
-  (
-    {
-      downloadAll,
-      fetchNextPage,
-      globalFilter,
-      hasNextPage,
-      isFetching,
-      setGlobalFilter,
-      setSorting,
-      sorting,
-      tableData,
-      totalDbRowCount,
-      rowSelection,
-      setRowSelection,
-    },
-    ref
-  ) => {
-    const rowChangePreventDeselect = (newSelection: Updater<Record<string, boolean>>) => {
+  ({ downloadAll, fetchNextPage, hasNextPage, isFetching, tableData, totalDbRowCount }, ref) => {
+    const rowChangePreventDeselect = (updater: Updater<Record<string, boolean>>) => {
       // because when you mouse click, it is always a function
       // when you __table.setRowSelection({2:true})  or ({}) or __table.resetRowSelection()  it is always an object.
-      if (typeof newSelection === "function") {
-        const updatedSelection = newSelection({});
+      if (typeof updater === "function") {
+        const updatedSelection = updater({});
+        console.log("rowChangePreventDeselect where it is function ", updatedSelection);
         if (Object.keys(updatedSelection).length === 0) return;
         setRowSelection(updatedSelection);
       } else {
-        setRowSelection(newSelection);
+        // allow empty object here, works as .clear() programmatically
+        setRowSelection({ ...updater });
       }
     };
+
+    const { globalFilter, rowSelection, setGlobalFilter, setRowSelection, setSorting, sorting } = useMasterTableState();
 
     const table = useReactTable<CompanyDto>({
       data: tableData,
@@ -75,8 +51,6 @@ export const MasterTableBusiness = forwardRef<MasterTableHandle, MasterTableBusi
       debugTable: true,
     });
 
-    const selectedIndex: number | undefined = table.getSelectedRowModel().rows[0]?.index;
-
     const reselectRowAfterDelete = useCallback(
       (selectedIndex: number | undefined) => {
         console.log("handling reselect row after delete - ", selectedIndex);
@@ -100,8 +74,14 @@ export const MasterTableBusiness = forwardRef<MasterTableHandle, MasterTableBusi
 
     useImperativeHandle(ref, () => ({
       reselectRowAfterDelete,
-      selectedIndex,
+      getSelectedIndex: () => table.getSelectedRowModel().rows[0]?.index,
     }));
+
+    // select index 0 table row on page load.
+    useEffect(() => {
+      const firstRowId = tableData[0]?.id;
+      setRowSelection(firstRowId ? { [firstRowId]: true } : {});
+    }, []);
 
     return (
       <MasterTable
@@ -118,5 +98,5 @@ export const MasterTableBusiness = forwardRef<MasterTableHandle, MasterTableBusi
 
 export type MasterTableHandle = {
   reselectRowAfterDelete: (selectedIndex: number | undefined) => void;
-  selectedIndex: number | undefined;
+  getSelectedIndex: () => number | undefined;
 };

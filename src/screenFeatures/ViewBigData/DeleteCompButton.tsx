@@ -3,18 +3,21 @@ import useDeleteCompany from "../../hooks/company/useDeleteCompany";
 
 type DeleteCompButtonProps = {
   companyId: number | undefined;
-  reselectRowAfterDelete: () => void;
+  reselectRowAfterDelete?: (rowIndex?: number) => void;
+  getRowIndex?: () => number | undefined;
 };
 
-export default function DeleteCompButton({ companyId, reselectRowAfterDelete }: DeleteCompButtonProps) {
+export default function DeleteCompButton({ companyId, reselectRowAfterDelete, getRowIndex }: DeleteCompButtonProps) {
   const deleteMutation = useDeleteCompany();
 
   const handleOnClick = () => {
     if (!companyId) return;
-
+    const selectedRowIndex = getRowIndex?.();
     console.log("button clicked delete comp id : ", companyId);
     deleteMutation.mutate(companyId, {
-      onSuccess: () => reselectRowAfterDelete(),
+      onSuccess: () => {
+        reselectRowAfterDelete?.(selectedRowIndex);
+      },
     });
   };
   return (
