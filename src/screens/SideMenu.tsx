@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 
 const MENU_ITEMS = [
   { to: "", icon: <LayoutDashboard size={29} />, label: "Dashboard" },
-  { to: "newCompany", icon: <Building size={29} />, label: "New Company" },
+  // { to: "newCompany", icon: <Building size={29} />, label: "New Company" },
   { to: "settings", icon: <Settings size={29} />, label: "Settings" },
-  { to: "crm", icon: <Swords size={29} />, label: "CRM or PK" },
+  // { to: "crm", icon: <Swords size={29} />, label: "CRM or PK" },
 ];
 
 export default function SideMenu() {
