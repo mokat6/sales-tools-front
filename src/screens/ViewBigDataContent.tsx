@@ -1,9 +1,9 @@
 import { KeyValue } from "../components/KeyValue";
 import ClassificationSelector from "../screenFeatures/ViewBigData/ClassificationSelector";
 import DeleteCompButton from "../screenFeatures/ViewBigData/DeleteCompButton";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import formatCompany from "../format/formatCompany";
-import { MasterTable } from "../screenFeatures/ViewBigData/masterTable/MasterTable";
+import { MasterTable, type MasterTableImperical } from "../screenFeatures/ViewBigData/masterTable/MasterTable";
 import {
   getCoreRowModel,
   useReactTable,
@@ -40,86 +40,30 @@ function ViewBigDataContent({
   hasNextPage,
   downloadAll,
 }: ViewBigDataContentProps) {
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>(() => {
-    const firstRowId = tableData[0]?.id;
-    return firstRowId ? { [firstRowId]: true } : {};
-  });
+  // const selectedCompanyIdString: string | undefined = Object.keys(rowSelection)[0];
+  // const selectedCompanyId = selectedCompanyIdString ? Number(selectedCompanyIdString) : undefined;
+  const masterTableImpericalRef = useRef<MasterTableImperical>(null);
+  // const selectedIndex: number | undefined = table.getSelectedRowModel().rows[0]?.index;
 
-  const selectedCompanyIdString: string | undefined = Object.keys(rowSelection)[0];
-  const selectedCompanyId = selectedCompanyIdString ? Number(selectedCompanyIdString) : undefined;
+  const selectedCompanyId = masterTableImpericalRef.current?.getSelectedCompanyId();
   const { data: selectedCompany } = useCompany_InfinityCursor(selectedCompanyId);
-
-  const rowChangePreventDeselect = (newSelection: Updater<Record<string, boolean>>) => {
-    // because when you mouse click, it is always a function
-    // when you __table.setRowSelection({2:true})  or ({}) or __table.resetRowSelection()  it is always an object.
-    if (typeof newSelection === "function") {
-      const updatedSelection = newSelection({});
-      if (Object.keys(updatedSelection).length === 0) return;
-      setRowSelection(updatedSelection);
-    } else {
-      setRowSelection(newSelection);
-    }
-  };
-
-  const table = useReactTable<CompanyDto>({
-    data: tableData,
-    columns,
-    getRowId: (row) => {
-      if (row.id === undefined) throw new Error("row.id is undefined/null, set up in useReactTable({}) options obj");
-      return row.id.toString();
-    },
-    state: {
-      rowSelection,
-      sorting,
-      globalFilter,
-    },
-    onGlobalFilterChange: setGlobalFilter,
-    manualFiltering: true,
-    enableRowSelection: true,
-    enableMultiRowSelection: false,
-    onRowSelectionChange: rowChangePreventDeselect,
-    manualSorting: true, // SERVER-SIDE sorting
-    enableMultiSort: false,
-    onSortingChange: setSorting, // the sorting data is [{colId, isDesc}], always 0 or 1 item in [] when enableMultiSort: false
-    getCoreRowModel: getCoreRowModel(),
-    debugTable: true,
-  });
-
-  const selectedIndex: number | undefined = table.getSelectedRowModel().rows[0]?.index;
-
-  const reselectAfterCompanyDelete = useCallback(
-    (deletedRowIndex: number | undefined) => {
-      if (deletedRowIndex === undefined) return;
-
-      const allRows = table.getRowModel().rows;
-      const nextId = allRows[deletedRowIndex]?.id ?? allRows[deletedRowIndex - 1]?.id;
-      table.setRowSelection(nextId ? { [nextId]: true } : {});
-    },
-    [table]
-  );
-
   console.log("Rendering +++++++ .... ViewBigDataContent, selectedCompanyId> ", selectedCompanyId);
-  const tableToolbarDownloadAllBtn = (
-    <TableToolbarButton
-      callbackFn={downloadAll}
-      isLoading={isFetching}
-      isDisabled={!hasNextPage}
-      tooltipMsg="Load all rows in one go"
-    />
-  );
   return (
     <>
       <div className="flex gap-20  items-start  p-6 bg-bg-background">
         <section className="mt-10">
           <MasterTable
-            table={table}
-            {...{
-              totalDbRowCount,
-              isFetching,
-              fetchNextPage,
-              hasNextPage,
-              toolbarButtons: [tableToolbarDownloadAllBtn],
-            }}
+            data={tableData}
+            totalDbRowCount={totalDbRowCount}
+            isFetching={isFetching}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            globalFilter={globalFilter}
+            setGlobalFilter={setGlobalFilter}
+            sorting={sorting}
+            setSorting={setSorting}
+            downloadAll={downloadAll}
+            ref={masterTableImpericalRef}
           />
         </section>
         <section className="flex flex-col gap-5">
@@ -129,12 +73,6 @@ function ViewBigDataContent({
           </div>
 
           <ClassificationSelector id={selectedCompanyId} value={selectedCompany?.classification} />
-
-          <DeleteCompButton
-            selectedIndex={selectedIndex}
-            companyId={selectedCompanyId}
-            tableRowReselectFn={reselectAfterCompanyDelete}
-          />
 
           <MarkdownNoteModal companyNote={selectedCompany?.markdownNote} compId={selectedCompanyId} />
         </section>

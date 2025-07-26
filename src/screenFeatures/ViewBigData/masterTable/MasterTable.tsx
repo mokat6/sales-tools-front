@@ -1,18 +1,30 @@
-import { useCallback, useEffect, useRef } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
 import { ArrowDown, ArrowUp, ArrowUpDown, FilterX } from "lucide-react";
-import { flexRender, type Table } from "@tanstack/react-table";
+import { flexRender, type SortingState, type Table } from "@tanstack/react-table";
 import { VirtualizedTableBody } from "./VirtualizedTableBody";
 import type { CompanyDto } from "@/api/SwaggerSdk";
 import type { FetchNextPageFn } from "@/hooks/company/useCompaniesTableDataCursor_infinite";
 import { TextInput } from "@/components/TextInput";
+import { useMasterTable } from "./useMasterTable";
 
 export type MasterTableProps = {
-  table: Table<CompanyDto>;
+  // table: Table<CompanyDto>;
+  data: CompanyDto[];
   totalDbRowCount: number;
   isFetching: boolean;
   fetchNextPage: FetchNextPageFn;
   hasNextPage: boolean;
-  toolbarButtons: React.ReactNode[];
+  // toolbarButtons: React.ReactNode[];
+  globalFilter: string;
+  setGlobalFilter: React.Dispatch<React.SetStateAction<string>>;
+  sorting: SortingState;
+  setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
+  downloadAll: () => Promise<void>;
+};
+
+export type MasterTableImperical = {
+  getSelectedCompanyId: () => number | undefined;
+  reselectAfterCompanyDelete: () => void;
 };
 
 const emptyState = (isFilterApplied: boolean) => (
@@ -31,35 +43,38 @@ const emptyState = (isFilterApplied: boolean) => (
   </div>
 );
 
-export const MasterTable = ({
-  table,
-  totalDbRowCount,
-  isFetching,
-  fetchNextPage,
-  hasNextPage,
-  toolbarButtons,
-}: MasterTableProps) => {
+const MasterTable = forwardRef<MasterTableImperical, MasterTableProps>((props: MasterTableProps, ref) => {
   const scrollingTableContainerRef = useRef<HTMLDivElement>(null);
+
+  const {
+    table,
+    fetchNextPage,
+    totalDbRowCount,
+    fetchMoreOnBottomReached,
+    toolbarButtons,
+    selectedCompanyId,
+    reselectAfterCompanyDelete,
+  } = useMasterTable({
+    ...props,
+    scrollingTableContainerRef,
+  });
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      getSelectedCompanyId: () => selectedCompanyId,
+      reselectAfterCompanyDelete,
+    }),
+    [selectedCompanyId, reselectAfterCompanyDelete]
+  );
+
   const { rows } = table.getRowModel();
 
   const totalFetched = rows.length;
 
-  const fetchMoreOnBottomReached = useCallback(
-    (containerRefElement?: HTMLDivElement | null) => {
-      if (containerRefElement) {
-        const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
-        if (scrollHeight - scrollTop - clientHeight < 300 && !isFetching && hasNextPage) {
-          fetchNextPage();
-        }
-      }
-    },
-    [fetchNextPage, isFetching, hasNextPage]
-  );
+  // ----------------------------------
 
-  //a check on mount and after a fetch to see if the table is already scrolled to the bottom and immediately needs to fetch more data
-  useEffect(() => {
-    fetchMoreOnBottomReached(scrollingTableContainerRef.current);
-  }, [fetchMoreOnBottomReached, scrollingTableContainerRef]);
+  // ----------------------------------
 
   return (
     <div className="bg-bg-table text-text-body">
@@ -113,4 +128,8 @@ export const MasterTable = ({
       </div>
     </div>
   );
-};
+});
+
+const MasterTableWithRef = MasterTable;
+
+export { MasterTableWithRef as MasterTable };
