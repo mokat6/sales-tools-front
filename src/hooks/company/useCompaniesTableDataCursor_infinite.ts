@@ -1,3 +1,4 @@
+import React, { useRef } from "react";
 import {
   keepPreviousData,
   useInfiniteQuery,
@@ -5,33 +6,30 @@ import {
   type UseInfiniteQueryResult,
 } from "@tanstack/react-query";
 import { apiClient } from "../../api/ApiClient";
-import React, { useRef } from "react";
-import type { ColumnSort } from "@tanstack/react-table";
 import type { CompaniesResponseCursor } from "../../api/SwaggerSdk";
-
-type useCompaniesTableDataCursor_infiniteProps = {
-  pageSize?: number;
-  globalFilter?: string;
-  columnSort?: ColumnSort;
-};
+// import { useMasterTableState } from "../zustand/useMasterTableState";
+import { useMasterTableStore } from "@/zustand/store1";
 
 export type FetchNextPageFn = UseInfiniteQueryResult<InfiniteData<CompaniesResponseCursor>, Error>["fetchNextPage"];
 
 export type CompaniesInfiniteQueryResult = ReturnType<typeof useCompaniesTableDataCursor_infinite>;
 
-export const useCompaniesTableDataCursor_infinite = ({
-  pageSize,
-  globalFilter,
-  columnSort,
-}: useCompaniesTableDataCursor_infiniteProps) => {
+const PAGE_SIZE = 37;
+
+export const useCompaniesTableDataCursor_infinite = () => {
   const isDownloadAllRef = useRef(false);
+  // const { globalFilter, sorting } = useMasterTableState();
+  const globalFilter = useMasterTableStore((state) => state.globalFilter);
+  const sorting = useMasterTableStore((state) => state.sorting);
+
+  const columnSort = sorting[0];
 
   const { data, fetchNextPage, isLoading, hasNextPage, isFetching } = useInfiniteQuery({
     queryKey: ["companies-infinite-cursor", globalFilter, columnSort?.id, columnSort?.desc],
     queryFn: ({ pageParam }) =>
       apiClient.getCompaniesCursor({
         cursor: pageParam,
-        pageSize: pageSize,
+        pageSize: PAGE_SIZE,
         search: globalFilter,
         sortBy: columnSort?.id,
         sortDirection: columnSort?.desc ? "desc" : "asc",
