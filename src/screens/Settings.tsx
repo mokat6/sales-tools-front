@@ -6,8 +6,8 @@ export default function Settings() {
   const { setTheme, theme } = useTheme();
 
   return (
-    <div className="text-text-body">
-      settings here
+    <div className="text-text-body p-10 flex gap-20 items-center">
+      <p>Theme settings: </p>
       <Select options={themeOptions} value={theme} onValueChange={setTheme} />
     </div>
   );
