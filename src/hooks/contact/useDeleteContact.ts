@@ -19,7 +19,7 @@ export default function useDeleteContact() {
 
       return { queryKey, previousContacts };
     },
-    onSuccess: (data, vars) => {
+    onSuccess: (_, vars) => {
       toast.success(`Contact deleted - ${vars.value}`);
     },
     onError: (err, vars, context) => {

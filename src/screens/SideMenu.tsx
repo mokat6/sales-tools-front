@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Building, LayoutDashboard, MenuIcon, Settings, Swords } from "lucide-react";
+import { LayoutDashboard, MenuIcon, Settings } from "lucide-react";
 
 import { useEffect, useState } from "react";
 

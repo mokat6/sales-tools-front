@@ -25,7 +25,7 @@ export const useUpdateContact = () => {
       if (!context) return;
       queryClient.setQueryData(context.queryKey, context.prev);
     },
-    onSuccess: (data, vars) => {
+    onSuccess: (_, vars) => {
       toast.success(`Contact updated - ${vars.value}`);
     },
   });
