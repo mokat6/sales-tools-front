@@ -1,9 +1,10 @@
 import { Button } from "../../components/Button";
 import { useEffect, useState } from "react";
 import { Modal } from "../../components/Modal";
+import { lazy } from "react";
 
 // import React from "react";
-import { MarkDownEditor } from "../../components/markdown/MarkDownEditor";
+// import { MarkDownEditor } from "../../components/markdown/MarkDownEditor";
 import { usePatchCompanyInfinite } from "../../hooks/company/usePatchCompany";
 import { isDefined } from "../../helpers/isDefined";
 
@@ -12,6 +13,12 @@ type MarkdownNoteModalProps = {
   // setDraft: React.Dispatch<React.SetStateAction<string | undefined>>;
   compId: number | undefined;
 };
+
+const MarkDownEditor = lazy(() =>
+  import("../../components/markdown/MarkDownEditor").then((mod) => ({
+    default: mod.MarkDownEditor,
+  }))
+);
 
 export const MarkdownNoteModal = ({ companyNote, compId }: MarkdownNoteModalProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);

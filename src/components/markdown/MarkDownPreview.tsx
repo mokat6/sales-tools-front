@@ -1,5 +1,5 @@
-import MarkdownPreview from "@uiw/react-markdown-preview";
-import rehypeSanitize from "rehype-sanitize";
+import MarkdownPreview from "@uiw/react-markdown-preview/nohighlight";
+// import rehypeSanitize from "rehype-sanitize";
 
 type MarkDownPreviewPropps = {
   note?: string | undefined;
@@ -14,7 +14,7 @@ export const MarkDownPreview = ({ note }: MarkDownPreviewPropps) => {
           source={note}
           style={{ whiteSpace: "normal", colorScheme: "inherit" }}
           className="p-8"
-          rehypePlugins={[[rehypeSanitize]]}
+          skipHtml
         />
       </div>
     </>
