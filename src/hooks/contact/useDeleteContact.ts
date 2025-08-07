@@ -9,22 +9,20 @@ export default function useDeleteContact() {
   return useMutation({
     mutationFn: apiClient.deleteContact,
 
-    onMutate: async (delContact: IContactDto) => {
-      const queryKey = ["contacts", delContact.companyId];
+    onMutate: async ({ compId, contactId }: { compId: number; contactId: number; contactValue?: string }) => {
+      const queryKey = ["contacts", compId];
       await queryClient.cancelQueries({ queryKey });
       const previousContacts = queryClient.getQueryData<IContactDto[]>(queryKey);
-
-      const updatedContacts = previousContacts?.filter((contact) => contact.id !== delContact.id);
+      const updatedContacts = previousContacts?.filter((contact) => contact.id !== contactId);
       queryClient.setQueryData(queryKey, updatedContacts);
-
       return { queryKey, previousContacts };
     },
     onSuccess: (_, vars) => {
-      toast.success(`Contact deleted - ${vars.value}`);
+      toast.success(`Contact deleted - ${vars.contactValue}`);
     },
     onError: (err, vars, context) => {
-      toast.danger(`Contact failed to delete ${vars.value}`);
-      console.error(`Error deleting contact with id ${vars}: `, err);
+      toast.danger(`Contact failed to delete ${vars.contactValue}`);
+      console.error(`Error deleting contact ${vars}: `, err);
       if (!context) return;
       queryClient.setQueryData(context.queryKey, context.previousContacts);
     },

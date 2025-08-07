@@ -10,6 +10,7 @@ import { getContactColumns } from "./columns.tsx";
 import useDeleteContact from "@/hooks/contact/useDeleteContact.ts";
 import { EditContactModal } from "./EditContactModal.tsx";
 import { toast } from "@/components/toast/toastService.ts";
+import { isDefined } from "@/helpers/isDefined.ts";
 
 export const contactTypeOptions = [
   { label: "Email", value: ContactTypeDto.Email },
@@ -39,8 +40,11 @@ export const ContactsContainer = ({ compId }: ContactsContainerProps) => {
       toast.info("Please fill out both the contact type and value.");
       return;
     }
+    if (!isDefined(compId)) return;
+
+    const newContact = { value: contactValue, companyId: compId, type: contactType };
     mutation.mutate(
-      { value: contactValue, companyId: compId, type: contactType },
+      { compId, newContact },
       {
         onSuccess: () => {
           setContactType("");
@@ -71,7 +75,7 @@ export const ContactsContainer = ({ compId }: ContactsContainerProps) => {
             triggerClassName="min-w-30"
           />
           <TextInput placeholder="Enter value" onChange={setContactValue} value={contactValue} />
-          <Button onClick={handleCreateNewContact} disabled={mutation.isPending}>
+          <Button onClick={handleCreateNewContact} disabled={mutation.isPending || !isDefined(compId)}>
             Create
           </Button>
         </div>

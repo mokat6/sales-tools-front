@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../api/ApiClient";
 import { type IContactDto, type ICreateContactDto } from "../../api/SwaggerSdk";
-import { isDefined } from "../../helpers/isDefined";
 import { toast } from "@/components/toast/toastService";
 
 export default function useCreateContact() {
@@ -10,12 +9,9 @@ export default function useCreateContact() {
   return useMutation({
     mutationFn: apiClient.createContact,
 
-    onMutate: async (newContact: ICreateContactDto) => {
-      const queryKey = ["contacts", newContact.companyId];
+    onMutate: async ({ compId, newContact }: { compId: number; newContact: ICreateContactDto }) => {
+      const queryKey = ["contacts", compId];
       await queryClient.cancelQueries({ queryKey });
-
-      const compId = newContact.companyId;
-      if (!isDefined(compId)) return;
 
       const previousQuery = queryClient.getQueryData<IContactDto[]>(queryKey);
 
@@ -34,9 +30,9 @@ export default function useCreateContact() {
 
       queryClient.setQueryData(queryKey, updatedContacts);
     },
-    onError: (err, _newContact, context) => {
-      toast.danger(`Creating contact failed - ${_newContact.value}, Error: ${err.message}`);
-      console.error(`Error deleting company with id ${_newContact.companyId}: `, err);
+    onError: (err, _var, context) => {
+      toast.danger(`Creating contact failed - ${_var.newContact.value}, Error: ${err.message}`);
+      console.error(`Error deleting company ${_var.newContact}: `, err);
       if (!context) return;
       queryClient.setQueryData(context.queryKey, context.previousContacts);
     },

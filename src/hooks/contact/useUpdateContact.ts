@@ -9,8 +9,15 @@ export const useUpdateContact = () => {
   return useMutation({
     mutationFn: apiClient.updateContactPut,
 
-    onMutate: async (updatedContact) => {
-      const queryKey = ["contacts", updatedContact.companyId];
+    onMutate: async ({
+      compId,
+      contact: updatedContact,
+    }: {
+      compId: number;
+      contactId: number;
+      contact: IContactDto;
+    }) => {
+      const queryKey = ["contacts", compId];
       await queryClient.cancelQueries({ queryKey });
       const prev = queryClient.getQueryData<IContactDto[]>(queryKey);
 
@@ -26,7 +33,7 @@ export const useUpdateContact = () => {
       queryClient.setQueryData(context.queryKey, context.prev);
     },
     onSuccess: (_, vars) => {
-      toast.success(`Contact updated - ${vars.value}`);
+      toast.success(`Contact updated - ${vars.contact.value}`);
     },
   });
 };

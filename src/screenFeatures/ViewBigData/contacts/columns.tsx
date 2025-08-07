@@ -3,10 +3,19 @@ import type { ContactDto } from "@/api/SwaggerSdk";
 import { formatters } from "@/format/formatters";
 import { RowActions, type ActionButton } from "@/components/RowActions";
 import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { isDefined } from "@/helpers/isDefined";
 
 type getContactColumnsProps = {
   onEditContact: (contact: ContactDto) => void;
-  onDeleteContact: (contact: ContactDto) => void;
+  onDeleteContact: ({
+    compId,
+    contactId,
+    contactValue,
+  }: {
+    compId: number;
+    contactId: number;
+    contactValue?: string;
+  }) => void;
 };
 
 export const getContactColumns = ({
@@ -67,6 +76,7 @@ export const getContactColumns = ({
       // cell: (props) => <RowActions contactId={Number(props.row.id)} companyId={Number(props.row.original.companyId)} />,
       cell: (props) => {
         const contact = props.row.original;
+
         const actionButtons: ActionButton[] = [
           {
             icon: <Pencil1Icon />,
@@ -77,7 +87,15 @@ export const getContactColumns = ({
             icon: <TrashIcon />,
             label: "Delete",
             intent: "danger",
-            onSelect: () => onDeleteContact(contact),
+            onSelect: () => {
+              if (!isDefined(contact.id) || !isDefined(contact.companyId)) return;
+
+              onDeleteContact({
+                contactId: contact.id,
+                compId: contact.companyId,
+                contactValue: contact.value,
+              });
+            },
           },
         ];
 

@@ -15,7 +15,7 @@ export interface ISwaggerSdk {
      * @param pageSize (optional) 
      * @return OK
      */
-    listCompanies(pageIndex?: number | undefined, pageSize?: number | undefined): Promise<CompaniesResponseOffset>;
+    listCompaniesOffset(pageIndex?: number | undefined, pageSize?: number | undefined): Promise<CompaniesResponseOffset>;
 
     /**
      * @param pageSize (optional) 
@@ -26,7 +26,7 @@ export interface ISwaggerSdk {
      * @param isDownloadAll (optional) 
      * @return OK
      */
-    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined, sortBy?: string | undefined, sortDirection?: string | undefined, isDownloadAll?: boolean | undefined): Promise<CompaniesResponseCursor>;
+    listCompaniesCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined, sortBy?: string | undefined, sortDirection?: string | undefined, isDownloadAll?: boolean | undefined): Promise<CompaniesResponseCursor>;
 
     /**
      * @return OK
@@ -46,28 +46,26 @@ export interface ISwaggerSdk {
     getCompany(id: number): Promise<CompanyDto>;
 
     /**
-     * @param compId (optional) 
      * @return OK
      */
-    getCompanyContacts(compId?: number | undefined): Promise<ContactDto[]>;
+    getCompanyContacts(companyId: number): Promise<ContactDto[]>;
 
     /**
      * @param body (optional) 
      * @return OK
      */
-    createCompanyContact(body?: CreateContactDto | undefined): Promise<ContactDto>;
+    createCompanyContact(companyId: number, body?: CreateContactDto | undefined): Promise<ContactDto>;
 
     /**
-     * @param contactId (optional) 
      * @return OK
      */
-    deleteContact(contactId?: number | undefined): Promise<void>;
+    deleteContact(companyId: number, id: number): Promise<void>;
 
     /**
      * @param body (optional) 
      * @return OK
      */
-    updateContact(body?: ContactDto | undefined): Promise<void>;
+    updateContact(companyId: number, id: number, body?: ContactDto | undefined): Promise<void>;
 }
 
 export class SwaggerSdk implements ISwaggerSdk {
@@ -85,8 +83,8 @@ export class SwaggerSdk implements ISwaggerSdk {
      * @param pageSize (optional) 
      * @return OK
      */
-    listCompanies(pageIndex?: number | undefined, pageSize?: number | undefined, signal?: AbortSignal): Promise<CompaniesResponseOffset> {
-        let url_ = this.baseUrl + "/api/Companies?";
+    listCompaniesOffset(pageIndex?: number | undefined, pageSize?: number | undefined, signal?: AbortSignal): Promise<CompaniesResponseOffset> {
+        let url_ = this.baseUrl + "/api/v2/companies/offset-based?";
         if (pageIndex === null)
             throw new Error("The parameter 'pageIndex' cannot be null.");
         else if (pageIndex !== undefined)
@@ -106,11 +104,11 @@ export class SwaggerSdk implements ISwaggerSdk {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processListCompanies(_response);
+            return this.processListCompaniesOffset(_response);
         });
     }
 
-    protected processListCompanies(response: Response): Promise<CompaniesResponseOffset> {
+    protected processListCompaniesOffset(response: Response): Promise<CompaniesResponseOffset> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -137,8 +135,8 @@ export class SwaggerSdk implements ISwaggerSdk {
      * @param isDownloadAll (optional) 
      * @return OK
      */
-    listCompaninesWithCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined, sortBy?: string | undefined, sortDirection?: string | undefined, isDownloadAll?: boolean | undefined, signal?: AbortSignal): Promise<CompaniesResponseCursor> {
-        let url_ = this.baseUrl + "/api/Companies/cursor?";
+    listCompaniesCursor(pageSize?: number | undefined, cursor?: string | undefined, search?: string | undefined, sortBy?: string | undefined, sortDirection?: string | undefined, isDownloadAll?: boolean | undefined, signal?: AbortSignal): Promise<CompaniesResponseCursor> {
+        let url_ = this.baseUrl + "/api/v2/companies?";
         if (pageSize === null)
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
@@ -174,11 +172,11 @@ export class SwaggerSdk implements ISwaggerSdk {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processListCompaninesWithCursor(_response);
+            return this.processListCompaniesCursor(_response);
         });
     }
 
-    protected processListCompaninesWithCursor(response: Response): Promise<CompaniesResponseCursor> {
+    protected processListCompaniesCursor(response: Response): Promise<CompaniesResponseCursor> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -200,7 +198,7 @@ export class SwaggerSdk implements ISwaggerSdk {
      * @return OK
      */
     deleteCompany(id: number, signal?: AbortSignal): Promise<void> {
-        let url_ = this.baseUrl + "/api/Companies/{id}";
+        let url_ = this.baseUrl + "/api/v2/companies/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -239,7 +237,7 @@ export class SwaggerSdk implements ISwaggerSdk {
      * @return OK
      */
     patchCompany(id: number, body?: Operation[] | undefined, signal?: AbortSignal): Promise<CompanyDto> {
-        let url_ = this.baseUrl + "/api/Companies/{id}";
+        let url_ = this.baseUrl + "/api/v2/companies/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -284,7 +282,7 @@ export class SwaggerSdk implements ISwaggerSdk {
      * @return OK
      */
     getCompany(id: number, signal?: AbortSignal): Promise<CompanyDto> {
-        let url_ = this.baseUrl + "/api/Companies/{id}";
+        let url_ = this.baseUrl + "/api/v2/companies/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -322,15 +320,13 @@ export class SwaggerSdk implements ISwaggerSdk {
     }
 
     /**
-     * @param compId (optional) 
      * @return OK
      */
-    getCompanyContacts(compId?: number | undefined, signal?: AbortSignal): Promise<ContactDto[]> {
-        let url_ = this.baseUrl + "/api/Contact?";
-        if (compId === null)
-            throw new Error("The parameter 'compId' cannot be null.");
-        else if (compId !== undefined)
-            url_ += "compId=" + encodeURIComponent("" + compId) + "&";
+    getCompanyContacts(companyId: number, signal?: AbortSignal): Promise<ContactDto[]> {
+        let url_ = this.baseUrl + "/api/v2/companies/{companyId}/contacts";
+        if (companyId === undefined || companyId === null)
+            throw new Error("The parameter 'companyId' must be defined.");
+        url_ = url_.replace("{companyId}", encodeURIComponent("" + companyId));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -375,8 +371,11 @@ export class SwaggerSdk implements ISwaggerSdk {
      * @param body (optional) 
      * @return OK
      */
-    createCompanyContact(body?: CreateContactDto | undefined, signal?: AbortSignal): Promise<ContactDto> {
-        let url_ = this.baseUrl + "/api/Contact";
+    createCompanyContact(companyId: number, body?: CreateContactDto | undefined, signal?: AbortSignal): Promise<ContactDto> {
+        let url_ = this.baseUrl + "/api/v2/companies/{companyId}/contacts";
+        if (companyId === undefined || companyId === null)
+            throw new Error("The parameter 'companyId' must be defined.");
+        url_ = url_.replace("{companyId}", encodeURIComponent("" + companyId));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -415,15 +414,16 @@ export class SwaggerSdk implements ISwaggerSdk {
     }
 
     /**
-     * @param contactId (optional) 
      * @return OK
      */
-    deleteContact(contactId?: number | undefined, signal?: AbortSignal): Promise<void> {
-        let url_ = this.baseUrl + "/api/Contact?";
-        if (contactId === null)
-            throw new Error("The parameter 'contactId' cannot be null.");
-        else if (contactId !== undefined)
-            url_ += "contactId=" + encodeURIComponent("" + contactId) + "&";
+    deleteContact(companyId: number, id: number, signal?: AbortSignal): Promise<void> {
+        let url_ = this.baseUrl + "/api/v2/companies/{companyId}/contacts/{id}";
+        if (companyId === undefined || companyId === null)
+            throw new Error("The parameter 'companyId' must be defined.");
+        url_ = url_.replace("{companyId}", encodeURIComponent("" + companyId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -457,8 +457,14 @@ export class SwaggerSdk implements ISwaggerSdk {
      * @param body (optional) 
      * @return OK
      */
-    updateContact(body?: ContactDto | undefined, signal?: AbortSignal): Promise<void> {
-        let url_ = this.baseUrl + "/api/Contact";
+    updateContact(companyId: number, id: number, body?: ContactDto | undefined, signal?: AbortSignal): Promise<void> {
+        let url_ = this.baseUrl + "/api/v2/companies/{companyId}/contacts/{id}";
+        if (companyId === undefined || companyId === null)
+            throw new Error("The parameter 'companyId' must be defined.");
+        url_ = url_.replace("{companyId}", encodeURIComponent("" + companyId));
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);

@@ -75,7 +75,15 @@ export const EditContactModal = ({ isOpen, setIsOpen, contact }: EditContactModa
     if (!validate()) return;
 
     console.log("submitting...", formState);
-    updateContactMutation.mutate({ ...contact, ...formState });
+
+    if (!isDefined(contact.companyId) || !isDefined(contact.id)) return;
+
+    const mutateParams = {
+      compId: contact.companyId,
+      contactId: contact.id,
+      contact: { ...contact, ...formState },
+    };
+    updateContactMutation.mutate(mutateParams);
     setIsOpen(false);
   };
 
