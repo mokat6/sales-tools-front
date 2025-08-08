@@ -59,7 +59,10 @@ export const getContactColumns = ({
       accessorKey: "isOnWhatsapp", // makes `cell: (info) => info.getValue()`  work!
       id: "onWhatsapp",
       header: "W/A",
-      cell: (info) => info.getValue() ?? "-",
+      cell: (info) => {
+        const value = info.getValue();
+        return <div className="text-center">{value === true ? "✔" : value === false ? "✘" : "-"}</div>;
+      },
       enableSorting: true,
       enableResizing: false,
       size: 50,
