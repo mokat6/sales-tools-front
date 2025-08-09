@@ -8,7 +8,9 @@ import {
   type ICreateContactDto,
 } from "./SwaggerSdk";
 
-const BASE_URL = "http://localhost:5243";
+// const BASE_URL = "http://localhost:5243";
+// const BASE_URL = "https://anybus.online:5001";
+const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:5243";
 
 const myFetch = async (url: RequestInfo, init?: RequestInit) => {
   const customInit = {
